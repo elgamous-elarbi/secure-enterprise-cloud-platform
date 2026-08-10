@@ -1,0 +1,21 @@
+# Secrets — ne JAMAIS committer
+.env
+
+# Environnement Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Build artefacts (PyInstaller)
+build/
+dist/
+*.spec
+
+# Divers
+.pytest_cache/
+trivy-report.txt
+
+# Clé privée TLS — jamais sur Git
+ssl/server.key

@@ -1,0 +1,201 @@
+[
+  {
+    "id": "P1",
+    "bloc": "Production audiovisuelle",
+    "nom": "Production en studio",
+    "description": "Captation vidéo et audio en studio, représentative aussi de la production extérieure.",
+    "dic_disponibilite": "Élevé",
+    "dic_integrite": "Moyen",
+    "dic_confidentialite": "Faible",
+    "information_id": "I1",
+    "actifs_support_ids": [
+      "A13",
+      "A14",
+      "A15",
+      "A21",
+      "A27",
+      "A28"
+    ]
+  },
+  {
+    "id": "P2",
+    "bloc": "Production audiovisuelle",
+    "nom": "Montage vidéo",
+    "description": "Montage des rushs en vidéos finalisées avant diffusion ou archivage.",
+    "dic_disponibilite": "Moyen",
+    "dic_integrite": "Élevé",
+    "dic_confidentialite": "Moyen",
+    "information_id": "I2",
+    "actifs_support_ids": [
+      "A11",
+      "A16",
+      "A17",
+      "A29"
+    ]
+  },
+  {
+    "id": "P3",
+    "bloc": "Diffusion",
+    "nom": "Gestion du playout",
+    "description": "Diffusion effective des programmes vers l'antenne : cœur de la mission de la chaîne.",
+    "dic_disponibilite": "Critique",
+    "dic_integrite": "Critique",
+    "dic_confidentialite": "Faible",
+    "information_id": "I3",
+    "actifs_support_ids": [
+      "A12",
+      "A18",
+      "A22",
+      "A28"
+    ]
+  },
+  {
+    "id": "P4",
+    "bloc": "Diffusion",
+    "nom": "Programmation des émissions",
+    "description": "Planification et ordonnancement des programmes diffusés.",
+    "dic_disponibilite": "Élevé",
+    "dic_integrite": "Critique",
+    "dic_confidentialite": "Faible",
+    "information_id": "I4",
+    "actifs_support_ids": [
+      "A12",
+      "A28"
+    ]
+  },
+  {
+    "id": "P5",
+    "bloc": "Diffusion",
+    "nom": "Supervision de la diffusion",
+    "description": "Détection en temps réel des incidents antenne.",
+    "dic_disponibilite": "Critique",
+    "dic_integrite": "Moyen",
+    "dic_confidentialite": "Faible",
+    "information_id": "I5",
+    "actifs_support_ids": [
+      "A12",
+      "A4",
+      "A28",
+      "A32"
+    ]
+  },
+  {
+    "id": "P6",
+    "bloc": "Gestion des contenus",
+    "nom": "Archivage des productions",
+    "description": "Conservation à long terme des productions vidéo.",
+    "dic_disponibilite": "Moyen",
+    "dic_integrite": "Élevé",
+    "dic_confidentialite": "Moyen",
+    "information_id": "I6",
+    "actifs_support_ids": [
+      "A19",
+      "A20",
+      "A31"
+    ]
+  },
+  {
+    "id": "P7",
+    "bloc": "Gestion des contenus",
+    "nom": "Catalogage / Indexation",
+    "description": "Organisation et recherche des contenus archivés.",
+    "dic_disponibilite": "Faible",
+    "dic_integrite": "Moyen",
+    "dic_confidentialite": "Faible",
+    "information_id": "I7",
+    "actifs_support_ids": [
+      "A19"
+    ]
+  },
+  {
+    "id": "P8",
+    "bloc": "Information / Rédaction",
+    "nom": "Collecte des informations",
+    "description": "Recueil des informations auprès des sources et correspondants.",
+    "dic_disponibilite": "Moyen",
+    "dic_integrite": "Élevé",
+    "dic_confidentialite": "Élevé",
+    "information_id": "I8",
+    "actifs_support_ids": [
+      "A26",
+      "A30"
+    ]
+  },
+  {
+    "id": "P9",
+    "bloc": "Information / Rédaction",
+    "nom": "Publication des actualités",
+    "description": "Validation éditoriale et publication des contenus d'actualité (fusionne la validation éditoriale, commune à Production et Rédaction).",
+    "dic_disponibilite": "Élevé",
+    "dic_integrite": "Critique",
+    "dic_confidentialite": "Faible",
+    "information_id": "I9",
+    "actifs_support_ids": [
+      "A26",
+      "A30"
+    ]
+  },
+  {
+    "id": "P10",
+    "bloc": "Infrastructure IT",
+    "nom": "Administration système",
+    "description": "Administration des serveurs et de l'annuaire du SI.",
+    "dic_disponibilite": "Élevé",
+    "dic_integrite": "Critique",
+    "dic_confidentialite": "Élevé",
+    "information_id": "I10",
+    "actifs_support_ids": [
+      "A24",
+      "A25",
+      "A32"
+    ]
+  },
+  {
+    "id": "P11",
+    "bloc": "Infrastructure IT",
+    "nom": "Gestion des sauvegardes",
+    "description": "Sauvegarde et restauration des données du SI.",
+    "dic_disponibilite": "Élevé",
+    "dic_integrite": "Critique",
+    "dic_confidentialite": "Moyen",
+    "information_id": "I11",
+    "actifs_support_ids": [
+      "A19",
+      "A20",
+      "A31"
+    ]
+  },
+  {
+    "id": "P12",
+    "bloc": "Cybersécurité",
+    "nom": "Gestion des accès privilégiés (PAM)",
+    "description": "Contrôle et traçabilité des accès administratifs — périmètre technique approfondi du stage.",
+    "dic_disponibilite": "Critique",
+    "dic_integrite": "Critique",
+    "dic_confidentialite": "Critique",
+    "information_id": "I12",
+    "actifs_support_ids": [
+      "A1",
+      "A5",
+      "A6",
+      "A7",
+      "A9",
+      "A23",
+      "A32"
+    ]
+  },
+  {
+    "id": "P13",
+    "bloc": "Cybersécurité",
+    "nom": "Supervision SOC",
+    "description": "Détection des incidents de sécurité — périmètre technique approfondi du stage.",
+    "dic_disponibilite": "Élevé",
+    "dic_integrite": "Élevé",
+    "dic_confidentialite": "Moyen",
+    "information_id": "I13",
+    "actifs_support_ids": [
+      "A4",
+      "A32"
+    ]
+  }
+]

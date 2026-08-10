@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block title %}{{ p.nom }}{% endblock %}
+{% block content %}
+
+{% macro dic_color(niveau) -%}
+{%- if niveau == 'Critique' or niveau == 'Élevé' -%}var(--tally-red)
+{%- elif niveau == 'Moyen' -%}var(--diffusion-amber)
+{%- else -%}var(--phosphor-green)
+{%- endif -%}
+{%- endmacro %}
+
+<div class="page-header">
+  <div>
+    <div class="page-eyebrow"><a href="{{ url_for('processus_list') }}" class="text-dim">← Processus</a> · {{ p.bloc }}</div>
+    <div class="page-title">{{ p.nom }}</div>
+  </div>
+  <div class="dic-group">
+    <span class="dic-pill level-{{ p.dic_disponibilite }}" style="--dic-color: {{ dic_color(p.dic_disponibilite) }}; width:28px; height:28px; font-size:12px;" title="Disponibilité : {{ p.dic_disponibilite }}">D</span>
+    <span class="dic-pill level-{{ p.dic_integrite }}" style="--dic-color: {{ dic_color(p.dic_integrite) }}; width:28px; height:28px; font-size:12px;" title="Intégrité : {{ p.dic_integrite }}">I</span>
+    <span class="dic-pill level-{{ p.dic_confidentialite }}" style="--dic-color: {{ dic_color(p.dic_confidentialite) }}; width:28px; height:28px; font-size:12px;" title="Confidentialité : {{ p.dic_confidentialite }}">C</span>
+  </div>
+  {% if current_user.is_admin %}
+  <div class="flex" style="gap: 8px; margin-left: 14px;">
+    <a href="{{ url_for('processus_edit', processus_id=p.id) }}" class="btn">MODIFIER</a>
+    <form method="POST" action="{{ url_for('processus_delete', processus_id=p.id) }}" onsubmit="return confirm('Supprimer ce processus ?')">
+      <button type="submit" class="btn btn-danger">SUPPRIMER</button>
+    </form>
+  </div>
+  {% endif %}
+</div>
+
+<div class="panel" style="margin-bottom: 20px;">
+  <div class="panel-title">Description</div>
+  <div>{{ p.description }}</div>
+</div>
+
+<div class="detail-grid">
+  <div class="panel">
+    <div class="panel-title">Criticité DIC</div>
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+      <div class="flex-between"><span class="text-dim">Disponibilité</span> <span class="tally"><span class="tally-dot" style="--dot-color: {{ dic_color(p.dic_disponibilite) }}"></span>{{ p.dic_disponibilite }}</span></div>
+      <div class="flex-between"><span class="text-dim">Intégrité</span> <span class="tally"><span class="tally-dot" style="--dot-color: {{ dic_color(p.dic_integrite) }}"></span>{{ p.dic_integrite }}</span></div>
+      <div class="flex-between"><span class="text-dim">Confidentialité</span> <span class="tally"><span class="tally-dot" style="--dot-color: {{ dic_color(p.dic_confidentialite) }}"></span>{{ p.dic_confidentialite }}</span></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Information essentielle associée</div>
+    {% if information %}
+    <div style="font-weight: 600; margin-bottom: 4px;">{{ information.nom }}</div>
+    <div class="text-dim" style="font-size: 13px; margin-bottom: 10px;">{{ information.description }}</div>
+    <div class="dic-group">
+      <span class="dic-pill level-{{ information.dic_disponibilite }}" style="--dic-color: {{ dic_color(information.dic_disponibilite) }}" title="Disponibilité">D</span>
+      <span class="dic-pill level-{{ information.dic_integrite }}" style="--dic-color: {{ dic_color(information.dic_integrite) }}" title="Intégrité">I</span>
+      <span class="dic-pill level-{{ information.dic_confidentialite }}" style="--dic-color: {{ dic_color(information.dic_confidentialite) }}" title="Confidentialité">C</span>
+    </div>
+    {% else %}
+    <div class="text-faint">Aucune information associée.</div>
+    {% endif %}
+  </div>
+</div>
+
+<div class="panel" style="margin-bottom: 20px;">
+  <div class="panel-title">Actifs de support liés ({{ actifs_support|length }})</div>
+  {% if actifs_support %}
+  <div>
+    {% for a in actifs_support %}
+    <span class="support-chip">
+      <span class="badge" style="--badge-color: {% if a.criticite == 'Critique' %}var(--tally-red){% elif a.criticite in ['Élevée','Élevé'] %}var(--diffusion-amber){% else %}var(--phosphor-green){% endif %}; padding: 1px 6px; font-size: 9px;">{{ a.type }}</span>
+      {{ a.nom }}
+    </span>
+    {% endfor %}
+  </div>
+  <div class="text-faint mono" style="font-size: 11px; margin-top: 10px;">Table de correspondance processus ↔ actifs de support — voir la page Actifs pour le détail de chacun.</div>
+  {% else %}
+  <div class="text-faint">Aucun actif de support lié pour l'instant.</div>
+  {% endif %}
+</div>
+
+<div class="panel">
+  <div class="panel-title">Risques déjà évalués portant sur ces actifs de support</div>
+  {% if risques_lies %}
+  <div class="table-wrap" style="border: none;">
+    <table>
+      <thead>
+        <tr><th>ID</th><th>Actif</th><th>Scénario</th><th>Niveau</th><th>Statut</th></tr>
+      </thead>
+      <tbody>
+        {% for r in risques_lies %}
+        <tr onclick="window.location='{{ url_for('risque_detail', risque_id=r.id) }}'" style="cursor:pointer">
+          <td class="mono text-faint">{{ r.id }}</td>
+          <td class="mono">{{ r.actif.nom if r.actif else '—' }}</td>
+          <td>{{ r.description_scenario }}</td>
+          <td><span class="tally"><span class="tally-dot" style="--dot-color: {{ r.couleur }}"></span>{{ r.niveau }}</span></td>
+          <td class="text-dim">{{ r.statut }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state">Aucun scénario de risque évalué pour l'instant sur les actifs de support de ce processus. {% if current_user.is_admin %}<a href="{{ url_for('risques_add') }}" style="color: var(--diffusion-amber)">Évaluer un risque →</a>{% endif %}</div>
+  {% endif %}
+</div>
+
+{% endblock %}

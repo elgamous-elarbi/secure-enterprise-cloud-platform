@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block title %}{{ r.id }} — Détail du risque{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <div>
+    <div class="page-eyebrow"><a href="{{ url_for('risques_list') }}" class="text-dim">← Risques</a></div>
+    <div class="page-title mono">{{ r.id }}</div>
+  </div>
+  <span class="tally" style="font-size: 18px;">
+    <span class="tally-dot {% if r.niveau in ['Critique', 'Élevé'] %}blink{% endif %}" style="--dot-color: {{ r.couleur }}"></span>
+    {{ r.niveau }} <span class="text-faint">(score {{ r.score }})</span>
+  </span>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 320px; gap: 20px;">
+
+  <div style="display: flex; flex-direction: column; gap: 16px;">
+
+    <div class="panel">
+      <div class="panel-title">Scénario</div>
+      <p style="margin: 0;">{{ r.description_scenario or "—" }}</p>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Analyse DGSSI</div>
+      <div class="form-row" style="margin-bottom: 12px;">
+        <div>
+          <div class="text-faint mono" style="font-size: 10.5px; text-transform: uppercase; margin-bottom: 4px;">Actif</div>
+          <div>{{ r.actif.nom if r.actif else '—' }}</div>
+        </div>
+        <div>
+          <div class="text-faint mono" style="font-size: 10.5px; text-transform: uppercase; margin-bottom: 4px;">Menace</div>
+          <div>{{ r.menace.libelle if r.menace else '—' }}</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div>
+          <div class="text-faint mono" style="font-size: 10.5px; text-transform: uppercase; margin-bottom: 4px;">Vulnérabilité</div>
+          <div>{{ r.vulnerabilite.libelle if r.vulnerabilite else '—' }}</div>
+        </div>
+        <div>
+          <div class="text-faint mono" style="font-size: 10.5px; text-transform: uppercase; margin-bottom: 4px;">Probabilité × Impact</div>
+          <div>{{ r.probabilite }} × {{ r.impact }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Mesures appliquées</div>
+      {% if r.mesures %}
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        {% for m in r.mesures %}
+        <div class="flex">
+          <span class="tally-dot" style="--dot-color: var(--phosphor-green)"></span>
+          <span>{{ m.libelle }}</span>
+          <span class="badge" style="--badge-color: var(--text-faint); margin-left: auto;">{{ m.type }}</span>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="text-faint">Aucune mesure appliquée pour l'instant.</div>
+      {% endif %}
+    </div>
+
+    {% if r.recommandations %}
+    <div class="panel" style="border-color: var(--diffusion-amber);">
+      <div class="panel-title" style="color: var(--diffusion-amber);">Mesures recommandées</div>
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        {% for m in r.recommandations %}
+        <div class="flex">
+          <span class="tally-dot" style="--dot-color: var(--diffusion-amber)"></span>
+          <span>{{ m.libelle }}</span>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    {% if r.commentaire %}
+    <div class="panel">
+      <div class="panel-title">Commentaire / preuve</div>
+      <p style="margin: 0;" class="text-dim">{{ r.commentaire }}</p>
+    </div>
+    {% endif %}
+
+  </div>
+
+  <div class="panel" style="align-self: start;">
+    <div class="panel-title">Statut du traitement</div>
+    {% if current_user.is_admin %}
+    <form method="POST" action="{{ url_for('risque_update_statut', risque_id=r.id) }}">
+      <select name="statut" onchange="this.form.submit()">
+        {% for s in statuts %}
+        <option value="{{ s }}" {% if r.statut == s %}selected{% endif %}>{{ s }}</option>
+        {% endfor %}
+      </select>
+    </form>
+    {% else %}
+    <span class="badge" style="--badge-color: {% if r.statut == 'Réduire' %}var(--phosphor-green){% elif r.statut == 'Accepter' %}var(--diffusion-amber){% elif r.statut == 'Éviter' %}var(--type-materiel){% elif r.statut == 'Transférer' %}var(--type-reseau){% else %}var(--text-faint){% endif %}">{{ r.statut }}</span>
+    <div class="text-faint" style="font-size: 11px; margin-top: 10px;">Lecture seule — profil auditeur</div>
+    {% endif %}
+  </div>
+
+</div>
+
+{% endblock %}

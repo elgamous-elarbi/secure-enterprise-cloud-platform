@@ -1,0 +1,119 @@
+[
+  {
+    "id": "I1",
+    "processus_id": "P1",
+    "nom": "Vidéos brutes",
+    "description": "Rushs issus de la captation studio et extérieure.",
+    "dic_disponibilite": "Moyen",
+    "dic_integrite": "Élevé",
+    "dic_confidentialite": "Faible"
+  },
+  {
+    "id": "I2",
+    "processus_id": "P2",
+    "nom": "Vidéos montées",
+    "description": "Contenus vidéo finalisés prêts à diffuser ou archiver.",
+    "dic_disponibilite": "Moyen",
+    "dic_integrite": "Élevé",
+    "dic_confidentialite": "Moyen"
+  },
+  {
+    "id": "I3",
+    "processus_id": "P3",
+    "nom": "Playlist de diffusion",
+    "description": "Liste ordonnée des programmes à diffuser sur le playout.",
+    "dic_disponibilite": "Critique",
+    "dic_integrite": "Critique",
+    "dic_confidentialite": "Faible"
+  },
+  {
+    "id": "I4",
+    "processus_id": "P4",
+    "nom": "Conducteur d'émission",
+    "description": "Document de séquencement détaillé d'une émission.",
+    "dic_disponibilite": "Élevé",
+    "dic_integrite": "Critique",
+    "dic_confidentialite": "Faible"
+  },
+  {
+    "id": "I5",
+    "processus_id": "P5",
+    "nom": "Flux TV / IPTV",
+    "description": "Flux de diffusion surveillés en temps réel.",
+    "dic_disponibilite": "Critique",
+    "dic_integrite": "Moyen",
+    "dic_confidentialite": "Faible"
+  },
+  {
+    "id": "I6",
+    "processus_id": "P6",
+    "nom": "Archives vidéo",
+    "description": "Productions conservées à long terme.",
+    "dic_disponibilite": "Moyen",
+    "dic_integrite": "Élevé",
+    "dic_confidentialite": "Moyen"
+  },
+  {
+    "id": "I7",
+    "processus_id": "P7",
+    "nom": "Métadonnées de catalogage",
+    "description": "Index et métadonnées permettant la recherche des contenus.",
+    "dic_disponibilite": "Faible",
+    "dic_integrite": "Moyen",
+    "dic_confidentialite": "Faible"
+  },
+  {
+    "id": "I8",
+    "processus_id": "P8",
+    "nom": "Sources / correspondants",
+    "description": "Identité et coordonnées des sources et correspondants.",
+    "dic_disponibilite": "Moyen",
+    "dic_integrite": "Élevé",
+    "dic_confidentialite": "Élevé"
+  },
+  {
+    "id": "I9",
+    "processus_id": "P9",
+    "nom": "Articles / dépêches",
+    "description": "Contenus rédactionnels publiés au public.",
+    "dic_disponibilite": "Élevé",
+    "dic_integrite": "Critique",
+    "dic_confidentialite": "Faible"
+  },
+  {
+    "id": "I10",
+    "processus_id": "P10",
+    "nom": "Configurations systèmes",
+    "description": "Paramétrages des serveurs et de l'annuaire.",
+    "dic_disponibilite": "Élevé",
+    "dic_integrite": "Critique",
+    "dic_confidentialite": "Élevé"
+  },
+  {
+    "id": "I11",
+    "processus_id": "P11",
+    "nom": "Sauvegardes (backups)",
+    "description": "Copies de sécurité des données du SI.",
+    "dic_disponibilite": "Élevé",
+    "dic_integrite": "Critique",
+    "dic_confidentialite": "Moyen"
+  },
+  {
+    "id": "I12",
+    "processus_id": "P12",
+    "nom": "Secrets PAM / clés SSH",
+    "description": "Identifiants et secrets gérés par le bastion.",
+    "dic_disponibilite": "Critique",
+    "dic_integrite": "Critique",
+    "dic_confidentialite": "Critique"
+  },
+  {
+    "id": "I13",
+    "processus_id": "P13",
+    "nom": "Logs de sécurité",
+    "description": "Journaux d'événements remontés au SIEM.",
+    "dic_disponibilite": "Élevé",
+    "dic_integrite": "Élevé",
+    "dic_confidentialite": "Moyen"
+  }
+]

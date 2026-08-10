@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Accès refusé{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <div>
+    <div class="page-eyebrow">Erreur 403</div>
+    <div class="page-title">Accès refusé</div>
+  </div>
+</div>
+
+<div class="panel" style="border-color: var(--tally-red); max-width: 560px;">
+  <div class="flex" style="gap: 10px; margin-bottom: 10px;">
+    <span class="tally-dot" style="--dot-color: var(--tally-red)"></span>
+    <span style="color: var(--tally-red); font-weight: 600;">Action non autorisée pour votre profil</span>
+  </div>
+  <p class="text-dim" style="margin: 0 0 16px 0;">
+    Votre compte est connecté avec le rôle <strong>Lecteur / Auditeur</strong>, qui ne permet que la consultation
+    du référentiel (principe du moindre privilège). La création, la modification et la suppression
+    sont réservées au rôle <strong>Administrateur</strong>.
+  </p>
+  <a href="{{ url_for('dashboard') }}" class="btn btn-primary">← Retour au tableau de bord</a>
+</div>
+
+{% endblock %}

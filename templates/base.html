@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Référentiel de gestion des risques{% endblock %} — DGSSI Medi1 TV</title>
+  <link rel="icon" href="{{ url_for('static', filename='img/medi1tv-logo.png') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script>
+    // Applique le thème enregistré AVANT le premier rendu (évite le flash
+    // d'un thème puis de l'autre au chargement de la page).
+    (function () {
+      var saved = localStorage.getItem('dgssi-theme');
+      var theme = saved || 'dark';
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-logo-plate">
+          <img src="{{ url_for('static', filename='img/medi1tv-logo.png') }}" alt="Medi1 TV" class="brand-logo">
+        </div>
+        <div class="brand-title">DGSSI · RISK CONTROL</div>
+        <div class="brand-sub"><span class="on-air-dot"></span> RÉFÉRENTIEL DES RISQUES SSI</div>
+      </div>
+      <a class="nav-item {% if request.endpoint == 'dashboard' %}active{% endif %}" href="{{ url_for('dashboard') }}">TABLEAU DE BORD</a>
+      <a class="nav-item {% if request.endpoint in ['processus_list', 'processus_detail'] %}active{% endif %}" href="{{ url_for('processus_list') }}">PROCESSUS</a>
+      <a class="nav-item {% if request.endpoint == 'actifs_list' or request.endpoint == 'actifs_add' %}active{% endif %}" href="{{ url_for('actifs_list') }}">ACTIFS</a>
+      <a class="nav-item {% if request.endpoint in ['risques_list', 'risques_add', 'risque_detail'] %}active{% endif %}" href="{{ url_for('risques_list') }}">RISQUES</a>
+      <a class="nav-item {% if request.endpoint == 'registre' %}active{% endif %}" href="{{ url_for('registre') }}">REGISTRE</a>
+      <button type="button" class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Basculer thème clair / sombre">
+        <span id="theme-toggle-icon">☾</span>
+        <span id="theme-toggle-label">MODE SOMBRE</span>
+      </button>
+      <div class="sidebar-clock" id="sidebar-clock">
+        <div class="sidebar-clock-time" id="clock-time">--:--:--</div>
+        <div class="sidebar-clock-date" id="clock-date">--</div>
+      </div>
+      {% if current_user.is_authenticated %}
+      <div class="user-badge">
+        <div class="user-badge-top">
+          <span class="user-badge-name">{{ current_user.nom_affiche }}</span>
+          <span class="role-pill role-{{ current_user.role }}">{{ 'ADMIN' if current_user.is_admin else 'LECTEUR' }}</span>
+        </div>
+        <a href="{{ url_for('logout') }}" class="user-badge-logout">Se déconnecter</a>
+      </div>
+      {% endif %}
+    </aside>
+    <main class="main">
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+  <script>
+    function tickClock() {
+      const now = new Date();
+      const time = now.toLocaleTimeString('fr-FR');
+      const date = now.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+      const t = document.getElementById('clock-time');
+      const d = document.getElementById('clock-date');
+      if (t) t.textContent = time;
+      if (d) d.textContent = date;
+    }
+    tickClock();
+    setInterval(tickClock, 1000);
+
+    function updateThemeToggleUI(theme) {
+      const icon = document.getElementById('theme-toggle-icon');
+      const label = document.getElementById('theme-toggle-label');
+      if (!icon || !label) return;
+      if (theme === 'light') {
+        icon.textContent = '☀';
+        label.textContent = 'MODE CLAIR';
+      } else {
+        icon.textContent = '☾';
+        label.textContent = 'MODE SOMBRE';
+      }
+    }
+
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme') || 'dark';
+      const next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('dgssi-theme', next);
+      updateThemeToggleUI(next);
+    }
+
+    updateThemeToggleUI(document.documentElement.getAttribute('data-theme') || 'dark');
+  </script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

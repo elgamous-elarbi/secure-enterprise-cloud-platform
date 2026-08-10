@@ -1,0 +1,15 @@
+[
+  {"id": "S1", "libelle": "Authentification multi-facteurs (MFA)", "type": "Préventive", "description": "Second facteur exigé à la connexion pour les comptes sensibles"},
+  {"id": "S2", "libelle": "Isolation réseau par pare-feu", "type": "Préventive", "description": "Restriction des flux entrants à la seule IP du bastion"},
+  {"id": "S3", "libelle": "Chiffrement des secrets au repos", "type": "Préventive", "description": "Stockage chiffré des identifiants et clés dans la base du PAM"},
+  {"id": "S4", "libelle": "Journalisation centralisée (SIEM)", "type": "Détective", "description": "Remontée et corrélation des événements dans Wazuh"},
+  {"id": "S5", "libelle": "Enregistrement et replay de session", "type": "Détective", "description": "Traçabilité complète des actions effectuées via le bastion"},
+  {"id": "S6", "libelle": "Workflow d'approbation manuel documenté", "type": "Préventive", "description": "Séparation entre la demande et la validation d'un accès"},
+  {"id": "S7", "libelle": "Expiration automatique des autorisations", "type": "Préventive", "description": "Révocation automatique d'un accès à la date prévue"},
+  {"id": "S8", "libelle": "Verrouillage après échecs de connexion", "type": "Préventive", "description": "Blocage temporaire d'un compte après plusieurs échecs successifs"},
+  {"id": "S9", "libelle": "Restriction des permissions fichiers", "type": "Préventive", "description": "Application du principe du moindre privilège sur les fichiers sensibles"},
+  {"id": "S10", "libelle": "Revue périodique des accès", "type": "Corrective", "description": "Recertification régulière des droits attribués"},
+  {"id": "S11", "libelle": "Procédure de déprovisioning", "type": "Corrective", "description": "Désactivation systématique des comptes devenus inutiles"},
+  {"id": "S12", "libelle": "Plan de reprise / redondance", "type": "Corrective", "description": "Mécanisme de haute disponibilité pour les actifs critiques"},
+  {"id": "S13", "libelle": "Segmentation réseau par VLAN", "type": "Préventive", "description": "Cloisonnement des actifs du périmètre en segments réseau distincts pour limiter le mouvement latéral (mesure recommandée, non implémentée)"}
+]

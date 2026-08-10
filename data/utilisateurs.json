@@ -1,0 +1,16 @@
+[
+  {
+    "id": "U1",
+    "identifiant": "admin",
+    "nom_affiche": "Administrateur",
+    "mot_de_passe_hash": "scrypt:32768:8:1$LprqDtpTUBaRx9dz$8105e62e3a5c016560f92639b631cb15517ee9107844916ebfa26734d1af0ccf18c1be59e23996f3cf6f54dd14242a043d5a5433069e9e6d887c2677a4fec024",
+    "role": "admin"
+  },
+  {
+    "id": "U2",
+    "identifiant": "auditeur",
+    "nom_affiche": "Auditeur / Lecteur",
+    "mot_de_passe_hash": "scrypt:32768:8:1$oD0JFsrmgaTLVBPG$8bea5238bc95a804b8ffcb28544c6393243f95afc19e921ab85b56bc2c5027c9add33f9f98d75961cdf4647bd1284887036c949d7fe52c0e3caf87580b2fe404",
+    "role": "lecteur"
+  }
+]
