@@ -33,6 +33,6 @@ def test_login_page_accessible(client):
 
 
 def test_dashboard_redirects_when_not_authenticated(client):
-    resp = client.get("/dashboard", follow_redirects=False)
+    resp = client.get("/", follow_redirects=False)
     assert resp.status_code in (301, 302)
     assert "/login" in resp.headers["Location"]
