@@ -3,6 +3,7 @@
 
 # Environnement Python
 venv/
+.venv/
 __pycache__/
 *.pyc
 *.pyo
@@ -13,9 +14,20 @@ build/
 dist/
 *.spec
 
+# Terraform (utile pour la suite du projet)
+.terraform/
+*.tfstate
+*.tfstate.*
+
 # Divers
 .pytest_cache/
 trivy-report.txt
+*.log
 
 # Clé privée TLS — jamais sur Git
 ssl/server.key
+
+# Éditeur / OS
+.vscode/
+.DS_Store
+Thumbs.db
