@@ -61,7 +61,13 @@ module "rds" {
   vpc_id                   = module.network.vpc_id
   private_data_subnet_ids  = module.network.private_data_subnet_ids
 
-  # Vide pour l'instant : le module security/eks n'existe pas encore.
-  # Une fois créé, passer le SG des pods EKS ici pour autoriser l'accès.
-  allowed_security_group_ids = []
+allowed_security_group_ids = [module.security.app_security_group_id]
+}
+module "security" {
+  source = "../../modules/security"
+
+  project_name = var.project_name
+  environment  = var.environment
+  vpc_id       = module.network.vpc_id
+  vpc_cidr     = module.network.vpc_cidr
 }
