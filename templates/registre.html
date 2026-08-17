@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Registre des risques{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <div>
+    <div class="page-eyebrow">Généré le {{ date_export }}</div>
+    <div class="page-title">Registre des risques</div>
+  </div>
+  <a href="{{ url_for('registre_export_csv') }}" class="btn btn-primary">↓ EXPORTER EN CSV</a>
+</div>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Actif</th>
+        <th>Menace</th>
+        <th>Vulnérabilité</th>
+        <th>P × I</th>
+        <th>Niveau</th>
+        <th>Mesures</th>
+        <th>Statut</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in risques %}
+      <tr>
+        <td class="mono text-faint">{{ r.id }}</td>
+        <td>{{ r.actif.nom if r.actif else '—' }}</td>
+        <td class="text-dim">{{ r.menace.libelle if r.menace else '—' }}</td>
+        <td class="text-dim">{{ r.vulnerabilite.libelle if r.vulnerabilite else '—' }}</td>
+        <td class="mono">{{ r.probabilite[0] }} × {{ r.impact[0] }}</td>
+        <td>
+          <span class="tally">
+            <span class="tally-dot" style="--dot-color: {{ r.couleur }}"></span>
+            {{ r.niveau }}
+          </span>
+        </td>
+        <td class="text-dim" style="font-size: 12px;">
+          {% if r.mesures %}{{ r.mesures|map(attribute='libelle')|join(', ') }}{% else %}—{% endif %}
+        </td>
+        <td>
+          <span class="badge" style="--badge-color: {% if r.statut == 'Réduire' %}var(--phosphor-green){% elif r.statut == 'Accepter' %}var(--diffusion-amber){% elif r.statut == 'Éviter' %}var(--type-materiel){% elif r.statut == 'Transférer' %}var(--type-reseau){% else %}var(--text-faint){% endif %}">{{ r.statut }}</span>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

@@ -1,0 +1,206 @@
+{% extends "base.html" %}
+{% block title %}Évaluer un risque{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <div>
+    <div class="page-eyebrow"><a href="{{ url_for('risques_list') }}" class="text-dim">← Risques</a></div>
+    <div class="page-title">Évaluer un risque</div>
+  </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 320px; gap: 20px; max-width: 1100px;">
+
+  <div class="panel">
+    <form method="POST">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Actif concerné</label>
+          <select name="actif_id" id="actif-select" required>
+            {% for a in actifs %}
+            <option value="{{ a.id }}" data-type="{{ a.type }}">{{ a.nom }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Menace</label>
+          <select name="menace_id" id="menace-select" required onchange="toggleAutre('menace-select', 'menace-autre-field')">
+            {% for m in menaces %}
+            <option value="{{ m.id }}">{{ m.libelle }}</option>
+            {% endfor %}
+            <option value="AUTRE">Autre (préciser)…</option>
+          </select>
+          <div class="conditional-field" id="menace-autre-field">
+            <input type="text" name="menace_autre" placeholder="Précisez la menace">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Vulnérabilité exploitée</label>
+        <select name="vulnerabilite_id" id="vuln-select" required>
+          {% for v in vulnerabilites %}
+          <option value="{{ v.id }}">{{ v.libelle }}</option>
+          {% endfor %}
+          <option value="AUTRE">Autre (préciser)…</option>
+        </select>
+        <div class="conditional-field" id="vulnerabilite-autre-field">
+          <input type="text" name="vulnerabilite_autre" placeholder="Précisez la vulnérabilité">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Description du scénario</label>
+        <textarea name="description_scenario" placeholder="Décrivez concrètement comment ce risque pourrait se matérialiser..."></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Probabilité</label>
+          <select name="probabilite" id="prob-select" required>
+            <option value="Faible">Faible</option>
+            <option value="Moyenne">Moyenne</option>
+            <option value="Élevée">Élevée</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Impact</label>
+          <select name="impact" id="impact-select" required>
+            <option value="Faible">Faible</option>
+            <option value="Moyen">Moyen</option>
+            <option value="Élevé">Élevé</option>
+            <option value="Critique">Critique</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Mesures déjà appliquées</label>
+        <select name="mesures_appliquees" multiple size="5" id="mesures-select">
+          {% for m in mesures %}
+          <option value="{{ m.id }}">{{ m.libelle }}</option>
+          {% endfor %}
+        </select>
+        <div style="margin-top: 8px;">
+          <input type="text" name="mesure_autre" placeholder="Autre mesure appliquée, si non listée ci-dessus (facultatif)">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Statut</label>
+        <select name="statut">
+          {% for s in statuts %}
+          <option value="{{ s }}">{{ s }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Commentaire</label>
+        <textarea name="commentaire" placeholder="Justification, preuve associée..."></textarea>
+      </div>
+
+      <div class="flex">
+        <button type="submit" class="btn btn-primary">ENREGISTRER LE RISQUE</button>
+        <a href="{{ url_for('risques_list') }}" class="btn">ANNULER</a>
+      </div>
+    </form>
+  </div>
+
+  <div>
+    <div class="panel" style="margin-bottom: 16px;">
+      <div class="panel-title">Aperçu du niveau</div>
+      <div id="niveau-preview" class="tally" style="font-size: 18px;">
+        <span class="tally-dot" id="niveau-dot" style="--dot-color: var(--phosphor-green)"></span>
+        <span id="niveau-text">Faible</span>
+      </div>
+      <div class="text-faint mono" style="font-size: 11px; margin-top: 8px;">Score = Probabilité × Impact</div>
+    </div>
+
+    <div class="panel" id="reco-panel" style="display:none;">
+      <div class="panel-title">Mesures recommandées</div>
+      <div id="reco-list" style="display: flex; flex-direction: column; gap: 8px;"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function toggleAutre(selectId, fieldId) {
+  const select = document.getElementById(selectId);
+  const field = document.getElementById(fieldId);
+  field.classList.toggle('visible', select.value.toUpperCase() === 'AUTRE');
+}
+
+const PROB_SCORES = {"Faible": 1, "Moyenne": 2, "Élevée": 3};
+const IMPACT_SCORES = {"Faible": 1, "Moyen": 2, "Élevé": 3, "Critique": 4};
+const COLORS = {
+  "Critique": "var(--tally-red)",
+  "Élevé": "var(--tally-red)",
+  "Moyen": "var(--diffusion-amber)",
+  "Faible": "var(--phosphor-green)"
+};
+
+function niveauFromScore(score) {
+  if (score >= 9) return "Critique";
+  if (score >= 6) return "Élevé";
+  if (score >= 3) return "Moyen";
+  return "Faible";
+}
+
+function updatePreview() {
+  const p = document.getElementById('prob-select').value;
+  const i = document.getElementById('impact-select').value;
+  const score = PROB_SCORES[p] * IMPACT_SCORES[i];
+  const niveau = niveauFromScore(score);
+  document.getElementById('niveau-text').textContent = niveau + " (score " + score + ")";
+  document.getElementById('niveau-dot').style.setProperty('--dot-color', COLORS[niveau]);
+}
+
+document.getElementById('prob-select').addEventListener('change', updatePreview);
+document.getElementById('impact-select').addEventListener('change', updatePreview);
+
+function fetchRecommandations() {
+  const vulnSelect = document.getElementById('vuln-select');
+  const vulnId = vulnSelect.value;
+  toggleAutre('vuln-select', 'vulnerabilite-autre-field');
+
+  if (vulnId.toUpperCase() === 'AUTRE') {
+    // Vulnérabilité personnalisée : pas de recommandation automatique possible.
+    document.getElementById('reco-panel').style.display = 'none';
+    return;
+  }
+
+  const actifSelect = document.getElementById('actif-select');
+  const selectedOption = actifSelect.options[actifSelect.selectedIndex];
+  const typeActif = selectedOption ? selectedOption.dataset.type : '';
+
+  fetch('/api/vulnerabilites/' + vulnId + '/recommandations?type=' + encodeURIComponent(typeActif))
+    .then(r => r.json())
+    .then(data => {
+      const panel = document.getElementById('reco-panel');
+      const list = document.getElementById('reco-list');
+      list.innerHTML = '';
+      if (data.length === 0) {
+        panel.style.display = 'none';
+        return;
+      }
+      data.forEach(m => {
+        const div = document.createElement('div');
+        div.className = 'mono text-dim';
+        div.style.fontSize = '12.5px';
+        div.textContent = '→ ' + m.libelle;
+        list.appendChild(div);
+      });
+      panel.style.display = 'block';
+    });
+}
+
+document.getElementById('vuln-select').addEventListener('change', fetchRecommandations);
+document.getElementById('actif-select').addEventListener('change', fetchRecommandations);
+
+updatePreview();
+fetchRecommandations();
+</script>
+
+{% endblock %}

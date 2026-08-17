@@ -1,0 +1,226 @@
+{% extends "base.html" %}
+{% block title %}Tableau de bord{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <div>
+    <div class="page-eyebrow">Vue d'ensemble</div>
+    <div class="page-title">Tableau de bord</div>
+  </div>
+  <div class="flex" style="gap: 10px; align-items: center;">
+    <div class="filter-hint" id="filter-hint" style="display:none;">
+      <span id="filter-hint-text"></span>
+      <button type="button" onclick="clearFilter()">✕ Réinitialiser</button>
+    </div>
+    <a href="{{ url_for('export_dashboard_pdf') }}" class="btn btn-primary">⭳ EXPORTER EN PDF</a>
+  </div>
+</div>
+
+<div class="stat-grid" id="stat-grid">
+  <button type="button" class="stat-card filter-btn" data-niveau="Critique" style="--stat-color: var(--tally-red)" onclick="toggleFilter('Critique')">
+    <div class="stat-value">{{ stats.Critique }}</div>
+    <div class="stat-label">Risques critiques</div>
+  </button>
+  <button type="button" class="stat-card filter-btn" data-niveau="Élevé" style="--stat-color: var(--tally-red)" onclick="toggleFilter('Élevé')">
+    <div class="stat-value">{{ stats["Élevé"] }}</div>
+    <div class="stat-label">Risques élevés</div>
+  </button>
+  <button type="button" class="stat-card filter-btn" data-niveau="Moyen" style="--stat-color: var(--diffusion-amber)" onclick="toggleFilter('Moyen')">
+    <div class="stat-value">{{ stats.Moyen }}</div>
+    <div class="stat-label">Risques moyens</div>
+  </button>
+  <button type="button" class="stat-card filter-btn" data-niveau="Faible" style="--stat-color: var(--phosphor-green)" onclick="toggleFilter('Faible')">
+    <div class="stat-value">{{ stats.Faible }}</div>
+    <div class="stat-label">Risques faibles</div>
+  </button>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 300px; gap: 20px; align-items: start;">
+
+  <div class="panel">
+    <div class="flex-between" style="margin-bottom: 14px;">
+      <div class="panel-title mb-0">Registre des risques</div>
+      <div class="search-box">
+        <input type="text" id="search-input" placeholder="Rechercher un actif ou un scénario…" oninput="applyFilters()">
+      </div>
+    </div>
+    {% if risques %}
+    <div class="table-wrap" style="border: none;">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Actif</th>
+            <th>Scénario</th>
+            <th>Niveau</th>
+            <th>Statut</th>
+          </tr>
+        </thead>
+        <tbody id="risques-tbody">
+          {% for r in risques %}
+          <tr onclick="window.location='{{ url_for('risque_detail', risque_id=r.id) }}'"
+              style="cursor:pointer"
+              data-niveau="{{ r.niveau }}"
+              data-search="{{ (r.actif.nom if r.actif else '') ~ ' ' ~ r.description_scenario | lower }}">
+            <td class="mono text-faint">{{ r.id }}</td>
+            <td class="mono">{{ r.actif.nom if r.actif else '—' }}</td>
+            <td>{{ r.description_scenario }}</td>
+            <td>
+              <span class="tally">
+                <span class="tally-dot {% if r.niveau in ['Critique', 'Élevé'] %}blink{% endif %}" style="--dot-color: {{ r.couleur }}"></span>
+                {{ r.niveau }}
+              </span>
+            </td>
+            <td class="text-dim">{{ r.statut }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <div class="empty-state" id="no-results" style="display:none;">Aucun risque ne correspond à ce filtre.</div>
+    </div>
+    {% else %}
+    <div class="empty-state">Aucun risque encore évalué. {% if current_user.is_admin %}<a href="{{ url_for('risques_add') }}" style="color: var(--diffusion-amber)">Ajouter un risque →</a>{% endif %}</div>
+    {% endif %}
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 20px;">
+
+    <div class="panel">
+      <div class="panel-title">Répartition par niveau</div>
+      {% if total_risques %}
+      <div class="donut-wrap">
+        <svg width="150" height="150" viewBox="0 0 150 150">
+          <circle cx="75" cy="75" r="{{ chart_radius }}" fill="none" stroke="var(--border)" stroke-width="16"></circle>
+          {% for seg in chart_data %}
+          {% if seg.count > 0 %}
+          <circle class="donut-segment" data-niveau="{{ seg.niveau }}"
+            cx="75" cy="75" r="{{ chart_radius }}" fill="none"
+            stroke="{{ seg.color }}" stroke-width="16"
+            stroke-dasharray="{{ seg.dasharray }}"
+            stroke-dashoffset="{{ seg.dashoffset }}"
+            transform="rotate(-90 75 75)"
+            onclick="toggleFilter('{{ seg.niveau }}')">
+            <title>{{ seg.niveau }} — {{ seg.count }} ({{ seg.pct }}%)</title>
+          </circle>
+          {% endif %}
+          {% endfor %}
+          <text x="75" y="70" text-anchor="middle" class="donut-center-label" fill="var(--text)" font-size="26" font-weight="700">{{ total_risques }}</text>
+          <text x="75" y="88" text-anchor="middle" class="donut-center-label" fill="var(--text-faint)" font-size="9" letter-spacing="1">RISQUES</text>
+        </svg>
+        <div class="donut-legend" id="donut-legend">
+          {% for seg in chart_data %}
+          <div class="donut-legend-item" data-niveau="{{ seg.niveau }}" onclick="toggleFilter('{{ seg.niveau }}')">
+            <span class="donut-legend-swatch" style="background: {{ seg.color }}"></span>
+            <span>{{ seg.niveau }}</span>
+            <span class="text-faint" style="margin-left:auto;">{{ seg.count }} · {{ seg.pct }}%</span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% else %}
+      <div class="empty-state" style="padding: 30px 10px;">Pas encore de données</div>
+      {% endif %}
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Périmètre</div>
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <div class="mini-stat" style="--mini-color: var(--type-logiciel);">
+          <div class="stat-value" style="font-size: 26px">{{ total_processus }}</div>
+          <div class="stat-label">Processus métier</div>
+        </div>
+        <div class="mini-stat" style="--mini-color: var(--type-materiel);">
+          <div class="stat-value" style="font-size: 26px">{{ total_actifs }}</div>
+          <div class="stat-label">Actifs recensés</div>
+        </div>
+        <div class="mini-stat" style="--mini-color: var(--diffusion-amber);">
+          <div class="stat-value" style="font-size: 26px">{{ total_risques }}</div>
+          <div class="stat-label">Risques évalués</div>
+        </div>
+      </div>
+      {% if current_user.is_admin %}
+      <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px;">
+        <a href="{{ url_for('actifs_add') }}" class="btn" style="width: 100%; justify-content: center;">+ AJOUTER UN ACTIF</a>
+        <a href="{{ url_for('risques_add') }}" class="btn btn-primary" style="width: 100%; justify-content: center;">+ ÉVALUER UN RISQUE</a>
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Actifs par type</div>
+      {% if repartition_types %}
+      <div class="type-breakdown">
+        {% for item in repartition_types %}
+        <div class="type-breakdown-item">
+          <span class="type-breakdown-dot" style="--dot-color: {{ item.couleur }}"></span>
+          <span style="min-width: 90px;">{{ item.type }}</span>
+          <span class="type-breakdown-bar-wrap">
+            <span class="type-breakdown-bar" style="--dot-color: {{ item.couleur }}; width: {{ item.pct }}%;"></span>
+          </span>
+          <span class="type-breakdown-count">{{ item.count }}</span>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="empty-state" style="padding: 20px 10px;">Aucun actif recensé</div>
+      {% endif %}
+    </div>
+
+  </div>
+
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+  let activeNiveau = null;
+
+  function toggleFilter(niveau) {
+    activeNiveau = (activeNiveau === niveau) ? null : niveau;
+    applyFilters();
+  }
+
+  function clearFilter() {
+    activeNiveau = null;
+    document.getElementById('search-input').value = '';
+    applyFilters();
+  }
+
+  function applyFilters() {
+    const search = document.getElementById('search-input').value.trim().toLowerCase();
+    const rows = document.querySelectorAll('#risques-tbody tr');
+    let visibleCount = 0;
+
+    rows.forEach(row => {
+      const matchesNiveau = !activeNiveau || row.dataset.niveau === activeNiveau;
+      const matchesSearch = !search || row.dataset.search.includes(search);
+      const show = matchesNiveau && matchesSearch;
+      row.classList.toggle('row-hidden', !show);
+      if (show) visibleCount++;
+    });
+
+    const noResults = document.getElementById('no-results');
+    if (noResults) noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.niveau === activeNiveau);
+    });
+    document.querySelectorAll('.donut-legend-item').forEach(el => {
+      el.classList.toggle('dimmed', activeNiveau && el.dataset.niveau !== activeNiveau);
+    });
+    document.querySelectorAll('.donut-segment').forEach(el => {
+      el.classList.toggle('dimmed', activeNiveau && el.dataset.niveau !== activeNiveau);
+    });
+
+    const hint = document.getElementById('filter-hint');
+    const hintText = document.getElementById('filter-hint-text');
+    if (activeNiveau) {
+      hint.style.display = 'flex';
+      hintText.textContent = 'Filtré : ' + activeNiveau;
+    } else {
+      hint.style.display = 'none';
+    }
+  }
+</script>
+{% endblock %}

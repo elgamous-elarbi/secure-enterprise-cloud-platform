@@ -1,6 +1,42 @@
+<<<<<<< HEAD
 .terraform/
 *.tfstate
 *.tfstate.backup
 .terraform.lock.hcl
 .env
 *.tfvarsterraform.zip 
+=======
+# Secrets — ne JAMAIS committer
+.env
+
+# Environnement Python
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Build artefacts (PyInstaller)
+build/
+dist/
+*.spec
+
+# Terraform (utile pour la suite du projet)
+.terraform/
+*.tfstate
+*.tfstate.*
+
+# Divers
+.pytest_cache/
+trivy-report.txt
+*.log
+
+# Clé privée TLS — jamais sur Git
+ssl/server.key
+
+# Éditeur / OS
+.vscode/
+.DS_Store
+Thumbs.db
+>>>>>>> f48679c173e2df807590e94eee9a65bfb68c3547

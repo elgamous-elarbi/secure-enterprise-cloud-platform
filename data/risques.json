@@ -1,0 +1,140 @@
+[
+  {
+    "id": "R1",
+    "actif_id": "A2",
+    "menace_id": "M2",
+    "vulnerabilite_id": "V2",
+    "probabilite": "Faible",
+    "impact": "Élevé",
+    "description_scenario": "Un attaquant sur le réseau interne tente une connexion SSH directe vers target-server en évitant le bastion",
+    "mesures_appliquees": [
+      "S2"
+    ],
+    "statut": "Réduire",
+    "commentaire": "Isolation réseau via ufw testée et validée — connexion directe bloquée et journalisée ([UFW BLOCK])"
+  },
+  {
+    "id": "R2",
+    "actif_id": "A3",
+    "menace_id": "M2",
+    "vulnerabilite_id": "V2",
+    "probabilite": "Faible",
+    "impact": "Élevé",
+    "description_scenario": "Un attaquant tente une connexion RDP directe vers win-server en évitant le bastion",
+    "mesures_appliquees": [
+      "S2"
+    ],
+    "statut": "Réduire",
+    "commentaire": "Règles pare-feu Windows dédiées créées et testées — accès direct refusé"
+  },
+  {
+    "id": "R3",
+    "actif_id": "A7",
+    "menace_id": "M1",
+    "vulnerabilite_id": "V10",
+    "probabilite": "Moyenne",
+    "impact": "Critique",
+    "description_scenario": "Un attaquant obtient le mot de passe d'un compte administrateur du bastion et tente de s'y connecter",
+    "mesures_appliquees": [
+      "S1",
+      "S8"
+    ],
+    "statut": "Réduire",
+    "commentaire": "MFA activé sur le compte admin, verrouillage natif après 7 échecs (30 min)"
+  },
+  {
+    "id": "R4",
+    "actif_id": "A9",
+    "menace_id": "M5",
+    "vulnerabilite_id": "V7",
+    "probabilite": "Faible",
+    "impact": "Critique",
+    "description_scenario": "Un utilisateur non autorisé lit le fichier config.txt et récupère les secrets applicatifs",
+    "mesures_appliquees": [
+      "S9"
+    ],
+    "statut": "Réduire",
+    "commentaire": "Permissions 600 root:root vérifiées et documentées"
+  },
+  {
+    "id": "R5",
+    "actif_id": "A5",
+    "menace_id": "M5",
+    "vulnerabilite_id": "V1",
+    "probabilite": "Moyenne",
+    "impact": "Critique",
+    "description_scenario": "Un secret de compte cible n'est jamais renourvelé et reste valide indéfiniment en cas de fuite",
+    "mesures_appliquees": [
+      "S3"
+    ],
+    "statut": "Accepter",
+    "commentaire": "Rotation automatique non disponible en édition Community — chiffrement au repos confirmé par requête SQL, risque résiduel assumé et documenté"
+  },
+  {
+    "id": "R6",
+    "actif_id": "A1",
+    "menace_id": "M4",
+    "vulnerabilite_id": "V4",
+    "probabilite": "Faible",
+    "impact": "Critique",
+    "description_scenario": "Le bastion tombe en panne (SPOF) et bloque tous les accès administratifs légitimes",
+    "mesures_appliquees": [],
+    "statut": "Accepter",
+    "commentaire": "Absence de haute disponibilité assumée compte tenu du périmètre de labo — à formaliser explicitement comme limite dans le mémoire"
+  },
+  {
+    "id": "R7",
+    "actif_id": "A10",
+    "menace_id": "M8",
+    "vulnerabilite_id": "V5",
+    "probabilite": "Moyenne",
+    "impact": "Moyen",
+    "description_scenario": "Un format de log non reconnu par le SIEM empêche la détection d'une connexion suspecte",
+    "mesures_appliquees": [
+      "S4"
+    ],
+    "statut": "Réduire",
+    "commentaire": "Décodeur/règles Wazuh personnalisés créés pour gunicorn.log après diagnostic du mauvais format initial"
+  },
+  {
+    "id": "R8",
+    "actif_id": "A6",
+    "menace_id": "M10",
+    "vulnerabilite_id": "V3",
+    "probabilite": "Moyenne",
+    "impact": "Moyen",
+    "description_scenario": "Un accès temporaire est accordé sans séparation entre la demande et l'approbation",
+    "mesures_appliquees": [
+      "S6",
+      "S7"
+    ],
+    "statut": "Réduire",
+    "commentaire": "Processus manuel documenté et testé (registre + expiration automatique)"
+  },
+  {
+    "id": "R9",
+    "actif_id": "A4",
+    "menace_id": "M4",
+    "vulnerabilite_id": "V4",
+    "probabilite": "Faible",
+    "impact": "Élevé",
+    "description_scenario": "Le SIEM Wazuh tombe en panne (SPOF, aucune redondance) et provoque une perte totale de visibilité et de détection pendant l'incident",
+    "mesures_appliquees": [],
+    "statut": "Accepter",
+    "commentaire": "Instance Wazuh mono-serveur sans haute disponibilité, cohérent avec le SPOF déjà documenté sur le bastion (R6) — limite assumée du périmètre labo, à formaliser dans le mémoire"
+  },
+  {
+    "id": "R10",
+    "actif_id": "A8",
+    "menace_id": "M2",
+    "vulnerabilite_id": "V11",
+    "probabilite": "Faible",
+    "impact": "Moyen",
+    "description_scenario": "Toutes les VMs du périmètre (bastion, cibles, Wazuh) partagent le même segment réseau sans VLAN dédié : une machine compromise sur ce segment pourrait tenter un mouvement latéral ou une écoute du trafic entre le bastion et les cibles",
+    "mesures_appliquees": [
+      "S2"
+    ],
+    "statut": "Accepter",
+    "commentaire": "Isolation par pare-feu (ufw / règles Windows) limite déjà les connexions directes vers les cibles (cf. R1/R2), mais aucune segmentation VLAN formelle n'est en place — mesure S13 (segmentation réseau) identifiée comme recommandation pour le plan de traitement, non implémentée faute de matériel réseau segmentable dans le labo VMware"
+  }
+]

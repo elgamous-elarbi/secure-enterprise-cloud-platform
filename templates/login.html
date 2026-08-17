@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Connexion — DGSSI Medi1 TV</title>
+  <link rel="icon" href="{{ url_for('static', filename='img/medi1tv-logo.png') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script>
+    (function () {
+      var saved = localStorage.getItem('dgssi-theme');
+      document.documentElement.setAttribute('data-theme', saved || 'dark');
+    })();
+  </script>
+</head>
+<body>
+  <div class="login-page">
+    <div class="login-card">
+      <div class="login-logo-plate">
+        <img src="{{ url_for('static', filename='img/medi1tv-logo.png') }}" alt="Medi1 TV" class="login-logo">
+      </div>
+      <div class="login-title">Référentiel de gestion des risques</div>
+      <div class="login-sub"><span class="on-air-dot"></span> DGSSI · RISK CONTROL</div>
+
+      {% if erreur %}
+      <div class="login-error">{{ erreur }}</div>
+      {% endif %}
+
+      <form method="POST" action="{{ url_for('login') }}">
+        <div class="login-field">
+          <label for="identifiant">Identifiant</label>
+          <input type="text" id="identifiant" name="identifiant" autocomplete="username" required autofocus>
+        </div>
+        <div class="login-field">
+          <label for="mot_de_passe">Mot de passe</label>
+          <input type="password" id="mot_de_passe" name="mot_de_passe" autocomplete="current-password" required>
+        </div>
+        <button type="submit" class="btn btn-primary login-submit">SE CONNECTER</button>
+      </form>
+
+      <div class="login-hint">
+        Accès protégé — deux profils : <strong>Administrateur</strong> (accès complet) et <strong>Lecteur / Auditeur</strong> (consultation seule), conformément au principe du moindre privilège appliqué au périmètre du stage.
+      </div>
+    </div>
+  </div>
+</body>
+</html>

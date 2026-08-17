@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Modifier un processus' if p else 'Nouveau processus' }}{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <div>
+    <div class="page-eyebrow"><a href="{{ url_for('processus_list') }}" class="text-dim">← Processus</a></div>
+    <div class="page-title">{{ 'Modifier ' + p.nom if p else 'Nouveau processus' }}</div>
+  </div>
+</div>
+
+<div class="panel" style="max-width: 760px;">
+  <form method="POST">
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Bloc</label>
+        {% set bloc_est_autre = p and p.bloc not in blocs_standards %}
+        <select name="bloc" id="bloc-select" required onchange="toggleAutre('bloc-select', 'bloc-autre-field')">
+          {% for b in blocs_standards %}
+          <option value="{{ b }}" {% if p and p.bloc == b %}selected{% endif %}>{{ b }}</option>
+          {% endfor %}
+          <option value="Autre" {% if bloc_est_autre %}selected{% endif %}>Autre (préciser)…</option>
+        </select>
+        <div class="conditional-field {% if bloc_est_autre %}visible{% endif %}" id="bloc-autre-field">
+          <input type="text" name="bloc_autre" placeholder="Précisez le bloc" value="{{ p.bloc if bloc_est_autre else '' }}">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Nom du processus</label>
+        <input type="text" name="nom" placeholder="ex : Production en studio" value="{{ p.nom if p else '' }}" required>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Description</label>
+      <textarea name="description" placeholder="Rôle du processus, contexte...">{{ p.description if p else '' }}</textarea>
+    </div>
+
+    <div class="panel" style="background: var(--panel-raised); margin: 4px 0 18px 0;">
+      <div class="panel-title">Criticité DIC du processus</div>
+      <div class="form-row" style="grid-template-columns: 1fr 1fr 1fr;">
+        <div class="form-group">
+          <label>Disponibilité</label>
+          <select name="dic_disponibilite" required>
+            {% for n in niveaux_dic %}
+            <option value="{{ n }}" {% if p and p.dic_disponibilite == n %}selected{% endif %}>{{ n }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Intégrité</label>
+          <select name="dic_integrite" required>
+            {% for n in niveaux_dic %}
+            <option value="{{ n }}" {% if p and p.dic_integrite == n %}selected{% endif %}>{{ n }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Confidentialité</label>
+          <select name="dic_confidentialite" required>
+            {% for n in niveaux_dic %}
+            <option value="{{ n }}" {% if p and p.dic_confidentialite == n %}selected{% endif %}>{{ n }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" style="background: var(--panel-raised); margin: 4px 0 18px 0;">
+      <div class="panel-title">Information essentielle associée</div>
+      <div class="form-group">
+        <label>Nom de l'information</label>
+        <input type="text" name="information_nom" placeholder="ex : Vidéos brutes" value="{{ information.nom if information else '' }}">
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea name="information_description" placeholder="Nature de l'information gérée...">{{ information.description if information else '' }}</textarea>
+      </div>
+      <div class="form-row" style="grid-template-columns: 1fr 1fr 1fr;">
+        <div class="form-group">
+          <label>Disponibilité</label>
+          <select name="information_dic_disponibilite">
+            {% for n in niveaux_dic %}
+            <option value="{{ n }}" {% if information and information.dic_disponibilite == n %}selected{% endif %}>{{ n }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Intégrité</label>
+          <select name="information_dic_integrite">
+            {% for n in niveaux_dic %}
+            <option value="{{ n }}" {% if information and information.dic_integrite == n %}selected{% endif %}>{{ n }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Confidentialité</label>
+          <select name="information_dic_confidentialite">
+            {% for n in niveaux_dic %}
+            <option value="{{ n }}" {% if information and information.dic_confidentialite == n %}selected{% endif %}>{{ n }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Actifs de support liés</label>
+      <select name="actifs_support_ids" multiple size="8" id="actifs-select">
+        {% for a in actifs %}
+        <option value="{{ a.id }}" {% if p and a.id in p.actifs_support_ids %}selected{% endif %}>{{ a.nom }} ({{ a.type }})</option>
+        {% endfor %}
+      </select>
+      <div class="text-faint mono" style="font-size: 11px; margin-top: 6px;">Ctrl/Cmd + clic pour sélectionner plusieurs actifs.</div>
+    </div>
+
+    <div class="flex">
+      <button type="submit" class="btn btn-primary">{{ 'ENREGISTRER LES MODIFICATIONS' if p else 'ENREGISTRER LE PROCESSUS' }}</button>
+      <a href="{{ url_for('processus_list') }}" class="btn">ANNULER</a>
+    </div>
+  </form>
+</div>
+
+<script>
+function toggleAutre(selectId, fieldId) {
+  const select = document.getElementById(selectId);
+  const field = document.getElementById(fieldId);
+  field.classList.toggle('visible', select.value.toUpperCase() === 'AUTRE');
+}
+</script>
+
+{% endblock %}

@@ -1,0 +1,12 @@
+[
+  {"id": "M1", "categorie": "Actions non autorisées", "libelle": "Usurpation d'identité / vol d'identifiants", "description": "Un attaquant obtient et utilise les identifiants d'un compte légitime"},
+  {"id": "M2", "categorie": "Actions non autorisées", "libelle": "Contournement des contrôles d'accès", "description": "Accès direct à un actif en évitant le point de passage obligé (bastion)"},
+  {"id": "M3", "categorie": "Compromission de fonctions", "libelle": "Abus de droits", "description": "Un utilisateur autorisé dépasse le périmètre de ses droits légitimes"},
+  {"id": "M4", "categorie": "Compromission de fonctions", "libelle": "Déni de service", "description": "Indisponibilité provoquée d'un actif ou d'un service critique"},
+  {"id": "M5", "categorie": "Compromission d'informations", "libelle": "Divulgation de secrets", "description": "Exposition de mots de passe, clés ou jetons sensibles"},
+  {"id": "M6", "categorie": "Compromission d'informations", "libelle": "Altération de données", "description": "Modification non autorisée de données ou de configurations"},
+  {"id": "M7", "categorie": "Événements physiques", "libelle": "Panne matérielle", "description": "Défaillance matérielle sans mécanisme de haute disponibilité"},
+  {"id": "M8", "categorie": "Compromission de fonctions", "libelle": "Défaut de traçabilité", "description": "Absence ou insuffisance de journalisation empêchant la détection d'un incident"},
+  {"id": "M9", "categorie": "Actions non autorisées", "libelle": "Ingénierie sociale (phishing)", "description": "Manipulation d'un utilisateur pour obtenir un accès ou une information"},
+  {"id": "M10", "categorie": "Compromission de fonctions", "libelle": "Absence de séparation des tâches", "description": "Une même personne demande et approuve un accès sans contrôle croisé"}
+]

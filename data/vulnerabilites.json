@@ -1,0 +1,13 @@
+[
+  {"id": "V1", "categorie": "Organisationnelle", "libelle": "Absence de rotation automatique des secrets", "description": "Les mots de passe des comptes cibles ne sont jamais renouvelés automatiquement"},
+  {"id": "V2", "categorie": "Technique", "libelle": "Isolation réseau incomplète", "description": "Un actif reste accessible en dehors du chemin imposé par le bastion"},
+  {"id": "V3", "categorie": "Organisationnelle", "libelle": "Absence de workflow d'approbation formel", "description": "Le contrôle d'une demande d'accès repose sur un processus manuel non outillé"},
+  {"id": "V4", "categorie": "Technique", "libelle": "Absence de haute disponibilité", "description": "Un actif critique constitue un point unique de défaillance (SPOF)"},
+  {"id": "V5", "categorie": "Technique", "libelle": "Journalisation incomplète ou mal formatée", "description": "Un format de log non reconnu empêche la détection automatisée d'événements"},
+  {"id": "V6", "categorie": "Organisationnelle", "libelle": "Absence de revue périodique des accès", "description": "Les droits attribués ne sont jamais recertifiés dans le temps"},
+  {"id": "V7", "categorie": "Technique", "libelle": "Permissions fichier trop permissives", "description": "Un fichier contenant des secrets est lisible par plus d'utilisateurs que nécessaire"},
+  {"id": "V8", "categorie": "Organisationnelle", "libelle": "Absence de procédure de déprovisioning", "description": "Un compte n'est pas désactivé alors que l'utilisateur n'en a plus besoin"},
+  {"id": "V9", "categorie": "Humaine", "libelle": "Sensibilisation insuffisante des utilisateurs", "description": "Manque de formation face aux techniques d'ingénierie sociale"},
+  {"id": "V10", "categorie": "Technique", "libelle": "Absence de MFA sur un compte sensible", "description": "Un compte à privilèges reste protégé par un seul facteur d'authentification"},
+  {"id": "V11", "categorie": "Technique", "libelle": "Absence de segmentation réseau (VLAN)", "description": "Les actifs du périmètre partagent le même segment réseau sans cloisonnement, facilitant un mouvement latéral ou une écoute du trafic en cas de compromission d'une machine du segment"}
+]

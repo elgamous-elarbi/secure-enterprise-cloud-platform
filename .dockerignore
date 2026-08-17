@@ -1,0 +1,14 @@
+venv/
+build/
+dist/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.spec
+.git
+.gitignore
+README.md
+README_MIGRATION_SQL.md
+GUIDE_DEMARRAGE_demarragede l'app.md
+.env

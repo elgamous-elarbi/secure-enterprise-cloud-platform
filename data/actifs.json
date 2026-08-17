@@ -1,0 +1,322 @@
+[
+  {
+    "id": "A1",
+    "nom": "jump-server",
+    "type": "Logiciel",
+    "service_it": "Sécurité",
+    "proprietaire": "Équipe Sécurité SI",
+    "criticite": "Critique",
+    "description": "Bastion PAM (JumpServer Community v4.10.16) — point de passage obligé pour tous les accès administratifs",
+    "date_ajout": "2026-07-01"
+  },
+  {
+    "nom": "target-server",
+    "type": "Matériel",
+    "service_it": "Infrastructure",
+    "proprietaire": "Équipe Infrastructure",
+    "criticite": "Élevée",
+    "description": "Serveur Linux administré (Ubuntu 24.04), cible de test du bastion",
+    "date_ajout": "2026-07-01",
+    "id": "A2"
+  },
+  {
+    "id": "A3",
+    "nom": "win-server",
+    "type": "Matériel",
+    "service_it": "Infrastructure",
+    "proprietaire": "Équipe Infrastructure",
+    "criticite": "Élevée",
+    "description": "Serveur Windows administré (Windows Server 2022), accès RDP via bastion",
+    "date_ajout": "2026-07-01"
+  },
+  {
+    "id": "A4",
+    "nom": "Wazuh",
+    "type": "Logiciel",
+    "service_it": "Sécurité",
+    "proprietaire": "Équipe Sécurité SI",
+    "criticite": "Élevée",
+    "description": "SIEM de supervision et de détection (manager, indexer, dashboard)",
+    "date_ajout": "2026-07-08"
+  },
+  {
+    "id": "A5",
+    "nom": "Base PostgreSQL JumpServer",
+    "type": "Données",
+    "service_it": "Sécurité",
+    "proprietaire": "Équipe Sécurité SI",
+    "criticite": "Critique",
+    "description": "Stocke les comptes, secrets chiffrés et configuration du bastion",
+    "date_ajout": "2026-07-01"
+  },
+  {
+    "id": "A6",
+    "nom": "Comptes privilégiés (testuser, Administrator)",
+    "type": "Personnel",
+    "service_it": "Infrastructure",
+    "proprietaire": "Équipe Infrastructure",
+    "criticite": "Élevée",
+    "description": "Comptes techniques cibles gérés par le bastion",
+    "date_ajout": "2026-07-01"
+  },
+  {
+    "id": "A7",
+    "nom": "Comptes utilisateurs bastion (admin, stagiaire)",
+    "type": "Personnel",
+    "service_it": "Sécurité",
+    "proprietaire": "Équipe Sécurité SI",
+    "criticite": "Élevée",
+    "description": "Comptes humains ayant accès au PAM",
+    "date_ajout": "2026-07-01"
+  },
+  {
+    "id": "A8",
+    "nom": "Réseau interne (192.168.88.0/24)",
+    "type": "Réseau",
+    "service_it": "Infrastructure",
+    "proprietaire": "Équipe Réseau",
+    "criticite": "Élevée",
+    "description": "Segment réseau du laboratoire hébergeant le périmètre PAM",
+    "date_ajout": "2026-07-01"
+  },
+  {
+    "id": "A9",
+    "nom": "Fichier config.txt (secrets JumpServer)",
+    "type": "Données",
+    "service_it": "Sécurité",
+    "proprietaire": "Équipe Sécurité SI",
+    "criticite": "Critique",
+    "description": "SECRET_KEY, BOOTSTRAP_TOKEN, DB_PASSWORD du bastion",
+    "date_ajout": "2026-07-01"
+  },
+  {
+    "id": "A10",
+    "nom": "Logs de sessions et d'audit",
+    "type": "Données",
+    "service_it": "Sécurité",
+    "proprietaire": "Équipe Sécurité SI",
+    "criticite": "Élevée",
+    "description": "Preuves de traçabilité des connexions SSH/RDP et alertes Wazuh",
+    "date_ajout": "2026-07-01"
+  },
+  {
+    "id": "A11",
+    "nom": "Serveur de montage vidéo",
+    "type": "Matériel",
+    "service_it": "Production",
+    "proprietaire": "Équipe Production",
+    "criticite": "Élevée",
+    "description": "Poste de montage utilisé pour la post-production des contenus",
+    "date_ajout": "2026-07-15"
+  },
+  {
+    "id": "A12",
+    "nom": "Système de diffusion (playout)",
+    "type": "Logiciel",
+    "service_it": "Diffusion",
+    "proprietaire": "Équipe Diffusion",
+    "criticite": "Critique",
+    "description": "Système automatisé de diffusion à l'antenne",
+    "date_ajout": "2026-07-15"
+  },
+  {
+    "id": "A13",
+    "nom": "Caméras",
+    "type": "Matériel",
+    "service_it": "Production",
+    "proprietaire": "Équipe Production",
+    "criticite": "Élevée",
+    "description": "Caméras de tournage studio et extérieur",
+    "date_ajout": "2026-07-16"
+  },
+  {
+    "id": "A14",
+    "nom": "Mélangeurs vidéo",
+    "type": "Matériel",
+    "service_it": "Production",
+    "proprietaire": "Équipe Production",
+    "criticite": "Élevée",
+    "description": "Mélangeurs vidéo de régie studio",
+    "date_ajout": "2026-07-16"
+  },
+  {
+    "id": "A15",
+    "nom": "Consoles audio",
+    "type": "Matériel",
+    "service_it": "Production",
+    "proprietaire": "Équipe Production",
+    "criticite": "Moyenne",
+    "description": "Consoles de mixage audio studio",
+    "date_ajout": "2026-07-16"
+  },
+  {
+    "id": "A16",
+    "nom": "Adobe Premiere",
+    "type": "Logiciel",
+    "service_it": "Production",
+    "proprietaire": "Équipe Production",
+    "criticite": "Moyenne",
+    "description": "Logiciel de montage vidéo",
+    "date_ajout": "2026-07-16"
+  },
+  {
+    "id": "A17",
+    "nom": "DaVinci Resolve",
+    "type": "Logiciel",
+    "service_it": "Production",
+    "proprietaire": "Équipe Production",
+    "criticite": "Moyenne",
+    "description": "Logiciel d'étalonnage et montage vidéo",
+    "date_ajout": "2026-07-16"
+  },
+  {
+    "id": "A18",
+    "nom": "Encodeurs de diffusion",
+    "type": "Matériel",
+    "service_it": "Diffusion",
+    "proprietaire": "Équipe Diffusion",
+    "criticite": "Critique",
+    "description": "Encodeurs alimentant les chaînes de diffusion (TV, IPTV, streaming)",
+    "date_ajout": "2026-07-16"
+  },
+  {
+    "id": "A19",
+    "nom": "NAS de production",
+    "type": "Matériel",
+    "service_it": "Infrastructure",
+    "proprietaire": "Équipe Infrastructure",
+    "criticite": "Élevée",
+    "description": "Stockage réseau des médias de production",
+    "date_ajout": "2026-07-16"
+  },
+  {
+    "id": "A20",
+    "nom": "SAN",
+    "type": "Matériel",
+    "service_it": "Infrastructure",
+    "proprietaire": "Équipe Infrastructure",
+    "criticite": "Élevée",
+    "description": "Baie de stockage réseau pour l'archivage",
+    "date_ajout": "2026-07-16"
+  },
+  {
+    "id": "A21",
+    "nom": "VLAN Production",
+    "type": "Réseau",
+    "service_it": "Production",
+    "proprietaire": "Équipe Réseau",
+    "criticite": "Élevée",
+    "description": "Segment réseau dédié aux équipements de production",
+    "date_ajout": "2026-07-16"
+  },
+  {
+    "id": "A22",
+    "nom": "VLAN Diffusion",
+    "type": "Réseau",
+    "service_it": "Diffusion",
+    "proprietaire": "Équipe Réseau",
+    "criticite": "Critique",
+    "description": "Segment réseau dédié à la chaîne de diffusion",
+    "date_ajout": "2026-07-16"
+  },
+  {
+    "id": "A23",
+    "nom": "VPN administrateurs",
+    "type": "Réseau",
+    "service_it": "Sécurité",
+    "proprietaire": "Équipe Sécurité SI",
+    "criticite": "Élevée",
+    "description": "Accès distant sécurisé pour les administrateurs",
+    "date_ajout": "2026-07-16"
+  },
+  {
+    "id": "A24",
+    "nom": "Active Directory",
+    "type": "Logiciel",
+    "service_it": "Infrastructure",
+    "proprietaire": "Équipe Infrastructure",
+    "criticite": "Critique",
+    "description": "Annuaire et gestion des identités du SI",
+    "date_ajout": "2026-07-16"
+  },
+  {
+    "id": "A25",
+    "nom": "VMware",
+    "type": "Logiciel",
+    "service_it": "Infrastructure",
+    "proprietaire": "Équipe Infrastructure",
+    "criticite": "Élevée",
+    "description": "Plateforme de virtualisation des serveurs",
+    "date_ajout": "2026-07-16"
+  },
+  {
+    "id": "A26",
+    "nom": "Postes de rédaction",
+    "type": "Matériel",
+    "service_it": "Rédaction",
+    "proprietaire": "Équipe Rédaction",
+    "criticite": "Moyenne",
+    "description": "Postes utilisateurs de la salle de rédaction",
+    "date_ajout": "2026-07-16"
+  },
+  {
+    "id": "A27",
+    "nom": "Studio TV",
+    "type": "Site physique",
+    "service_it": "Production",
+    "proprietaire": "Équipe Production",
+    "criticite": "Élevée",
+    "description": "Site physique du studio de tournage",
+    "date_ajout": "2026-07-16"
+  },
+  {
+    "id": "A28",
+    "nom": "Régie de diffusion",
+    "type": "Site physique",
+    "service_it": "Diffusion",
+    "proprietaire": "Équipe Diffusion",
+    "criticite": "Critique",
+    "description": "Site physique de pilotage de l'antenne",
+    "date_ajout": "2026-07-16"
+  },
+  {
+    "id": "A29",
+    "nom": "Salle de montage",
+    "type": "Site physique",
+    "service_it": "Production",
+    "proprietaire": "Équipe Production",
+    "criticite": "Moyenne",
+    "description": "Site physique des stations de montage",
+    "date_ajout": "2026-07-16"
+  },
+  {
+    "id": "A30",
+    "nom": "Salle de rédaction",
+    "type": "Site physique",
+    "service_it": "Rédaction",
+    "proprietaire": "Équipe Rédaction",
+    "criticite": "Moyenne",
+    "description": "Site physique de la rédaction",
+    "date_ajout": "2026-07-16"
+  },
+  {
+    "id": "A31",
+    "nom": "Datacenter",
+    "type": "Site physique",
+    "service_it": "Infrastructure",
+    "proprietaire": "Équipe Infrastructure",
+    "criticite": "Critique",
+    "description": "Site d'hébergement des baies de stockage et sauvegardes",
+    "date_ajout": "2026-07-16"
+  },
+  {
+    "id": "A32",
+    "nom": "Salle serveur",
+    "type": "Site physique",
+    "service_it": "Infrastructure",
+    "proprietaire": "Équipe Infrastructure",
+    "criticite": "Critique",
+    "description": "Site hébergeant jump-server, target-server, win-server et Wazuh",
+    "date_ajout": "2026-07-16"
+  }
+]

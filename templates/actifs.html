@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}Actifs{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <div>
+    <div class="page-eyebrow">{{ actifs|length }} actifs recensés</div>
+    <div class="page-title">Actifs</div>
+  </div>
+  {% if current_user.is_admin %}
+  <a href="{{ url_for('actifs_add') }}" class="btn btn-primary">+ AJOUTER UN ACTIF</a>
+  {% endif %}
+</div>
+
+{% if not current_user.is_admin %}
+<div class="readonly-banner">👁 Mode lecture seule — connecté en tant qu'auditeur, aucune modification possible.</div>
+{% endif %}
+
+{% if importes is not none %}
+<div class="panel" style="border-color: var(--phosphor-green); margin-bottom: 18px;">
+  <span class="text" style="color: var(--phosphor-green);">✓ {{ importes }} actif(s) importé(s) avec succès depuis le fichier CSV.</span>
+</div>
+{% endif %}
+{% if erreurs_import %}
+<div class="panel" style="border-color: var(--tally-red); margin-bottom: 18px;">
+  <span class="text" style="color: var(--tally-red);">✕ Import impossible : vérifiez que le fichier est bien un CSV contenant au minimum les colonnes nom, type et service_it.</span>
+</div>
+{% endif %}
+
+{% if actifs %}
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nom</th>
+        <th>Type</th>
+        <th>Service</th>
+        <th>Criticité</th>
+        <th>Propriétaire</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for a in actifs %}
+      <tr>
+        <td class="mono text-faint">{{ a.id }}</td>
+        <td><strong>{{ a.nom }}</strong><br><span class="text-dim" style="font-size: 12px">{{ a.description }}</span></td>
+        <td>
+          {% set type_colors = {
+            "Matériel": "var(--type-materiel)", "Logiciel": "var(--type-logiciel)",
+            "Données": "var(--type-donnees)", "Réseau": "var(--type-reseau)",
+            "Personnel": "var(--type-personnel)", "Site physique": "var(--type-site)",
+            "Service tiers": "var(--type-tiers)"
+          } %}
+          <span class="tally">
+            <span class="tally-dot" style="--dot-color: {{ type_colors.get(a.type, 'var(--type-autre)') }}"></span>
+            {{ a.type }}
+          </span>
+        </td>
+        <td>{{ a.service_it }}</td>
+        <td>
+          {% set c = a.criticite %}
+          <span class="badge" style="
+            --badge-color: {% if c == 'Critique' %}var(--tally-red){% elif c in ['Élevée', 'Élevé'] %}var(--diffusion-amber){% else %}var(--phosphor-green){% endif %};
+          ">{{ c }}</span>
+        </td>
+        <td class="text-dim">{{ a.proprietaire }}</td>
+        <td>
+          {% if current_user.is_admin %}
+          <div style="display: flex; gap: 6px;">
+            <a href="{{ url_for('actifs_edit', actif_id=a.id) }}" class="btn" style="padding: 5px 10px; font-size: 11px;">MODIFIER</a>
+            <form method="POST" action="{{ url_for('actifs_delete', actif_id=a.id) }}" onsubmit="return confirm('Supprimer cet actif ?')">
+              <button type="submit" class="btn btn-danger" style="padding: 5px 10px; font-size: 11px;">SUPPRIMER</button>
+            </form>
+          </div>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="empty-state">Aucun actif recensé pour le moment.</div>
+{% endif %}
+
+{% endblock %}

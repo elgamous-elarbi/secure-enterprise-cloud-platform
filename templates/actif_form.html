@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Modifier un actif' if actif else 'Ajouter un actif' }}{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <div>
+    <div class="page-eyebrow"><a href="{{ url_for('actifs_list') }}" class="text-dim">← Actifs</a></div>
+    <div class="page-title">{{ 'Modifier ' + actif.nom if actif else 'Ajouter un actif' }}</div>
+  </div>
+</div>
+
+{% if not actif %}
+<div class="tabs" style="margin-bottom: 18px;">
+  <button type="button" class="tab-btn active" id="tab-btn-manuel" onclick="switchTab('manuel')">SAISIE MANUELLE</button>
+  <button type="button" class="tab-btn" id="tab-btn-csv" onclick="switchTab('csv')">IMPORT CSV</button>
+</div>
+{% endif %}
+
+<div id="tab-manuel">
+<div class="panel" style="max-width: 640px;">
+  <form method="POST">
+    <div class="form-group">
+      <label>Nom de l'actif</label>
+      <input type="text" name="nom" placeholder="ex : Serveur de messagerie interne" value="{{ actif.nom if actif else '' }}" required>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Type</label>
+        {% set type_est_autre = actif and actif.type not in types_standards %}
+        <select name="type" id="type-select" required onchange="toggleAutre('type-select', 'type-autre-field')">
+          {% for t in types_standards %}
+          <option value="{{ t }}" {% if actif and actif.type == t %}selected{% endif %}>{{ t }}</option>
+          {% endfor %}
+          <option value="Autre" {% if type_est_autre %}selected{% endif %}>Autre (préciser)…</option>
+        </select>
+        <div class="conditional-field {% if type_est_autre %}visible{% endif %}" id="type-autre-field">
+          <input type="text" name="type_autre" placeholder="Précisez le type d'actif" value="{{ actif.type if type_est_autre else '' }}">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Service</label>
+        {% set service_est_autre = actif and actif.service_it not in services_standards %}
+        <select name="service_it" id="service-select" required onchange="toggleAutre('service-select', 'service-autre-field')">
+          {% for s in services_standards %}
+          <option value="{{ s }}" {% if actif and actif.service_it == s %}selected{% endif %}>{{ s }}</option>
+          {% endfor %}
+          <option value="Autre" {% if service_est_autre %}selected{% endif %}>Autre (préciser)…</option>
+        </select>
+        <div class="conditional-field {% if service_est_autre %}visible{% endif %}" id="service-autre-field">
+          <input type="text" name="service_autre" placeholder="Précisez le service" value="{{ actif.service_it if service_est_autre else '' }}">
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Propriétaire</label>
+        <input type="text" name="proprietaire" placeholder="Nom du responsable ou du service" value="{{ actif.proprietaire if actif else '' }}">
+      </div>
+      <div class="form-group">
+        <label>Criticité métier</label>
+        <select name="criticite" required>
+          {% for c in ["Faible", "Moyenne", "Élevée", "Critique"] %}
+          <option value="{{ c }}" {% if actif and actif.criticite == c %}selected{% endif %}>{{ c }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Description</label>
+      <textarea name="description" placeholder="Rôle de l'actif, contexte d'utilisation...">{{ actif.description if actif else '' }}</textarea>
+    </div>
+
+    <div class="flex">
+      <button type="submit" class="btn btn-primary">{{ 'ENREGISTRER LES MODIFICATIONS' if actif else "ENREGISTRER L'ACTIF" }}</button>
+      <a href="{{ url_for('actifs_list') }}" class="btn">ANNULER</a>
+    </div>
+  </form>
+</div>
+</div>
+
+{% if not actif %}
+<div id="tab-csv" style="display:none;">
+  <div class="panel" style="max-width: 640px;">
+    <div class="panel-title">Importer des actifs depuis un fichier CSV</div>
+    <div class="text-dim" style="font-size: 13px; margin-bottom: 16px;">
+      Le fichier doit contenir les colonnes : <span class="mono">nom, type, service_it, proprietaire, criticite, description</span>.
+      Les colonnes <span class="mono">nom</span>, <span class="mono">type</span> et <span class="mono">service_it</span> sont obligatoires.
+    </div>
+    <form method="POST" action="{{ url_for('actifs_importer') }}" enctype="multipart/form-data">
+      <div class="form-group">
+        <label>Fichier CSV</label>
+        <input type="file" name="fichier_csv" accept=".csv" required>
+      </div>
+      <div class="flex">
+        <button type="submit" class="btn btn-primary">IMPORTER LE FICHIER</button>
+        <a href="{{ url_for('actifs_modele_csv') }}" class="btn">⭳ TÉLÉCHARGER LE MODÈLE</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endif %}
+
+<script>
+function toggleAutre(selectId, fieldId) {
+  const select = document.getElementById(selectId);
+  const field = document.getElementById(fieldId);
+  field.classList.toggle('visible', select.value.toUpperCase() === 'AUTRE');
+}
+
+function switchTab(tab) {
+  const manuel = document.getElementById('tab-manuel');
+  const csv = document.getElementById('tab-csv');
+  const btnManuel = document.getElementById('tab-btn-manuel');
+  const btnCsv = document.getElementById('tab-btn-csv');
+  if (tab === 'manuel') {
+    manuel.style.display = 'block';
+    csv.style.display = 'none';
+    btnManuel.classList.add('active');
+    btnCsv.classList.remove('active');
+  } else {
+    manuel.style.display = 'none';
+    csv.style.display = 'block';
+    btnManuel.classList.remove('active');
+    btnCsv.classList.add('active');
+  }
+}
+</script>
+
+{% endblock %}

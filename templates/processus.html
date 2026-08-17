@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Processus métier{% endblock %}
+{% block content %}
+
+{% macro dic_color(niveau) -%}
+{%- if niveau == 'Critique' or niveau == 'Élevé' -%}var(--tally-red)
+{%- elif niveau == 'Moyen' -%}var(--diffusion-amber)
+{%- else -%}var(--phosphor-green)
+{%- endif -%}
+{%- endmacro %}
+
+<div class="page-header">
+  <div>
+    <div class="page-eyebrow">{{ processus|length }} processus métier recensés — biens essentiels</div>
+    <div class="page-title">Processus & informations</div>
+  </div>
+  {% if current_user.is_admin %}
+  <a href="{{ url_for('processus_add') }}" class="btn btn-primary">+ NOUVEAU PROCESSUS</a>
+  {% endif %}
+</div>
+
+{% if not current_user.is_admin %}
+<div class="readonly-banner">👁 Mode lecture seule — connecté en tant qu'auditeur, aucune modification possible.</div>
+{% endif %}
+
+<div class="dic-legend">
+  <span><span class="dic-pill" style="--dic-color: var(--text-faint); width:16px;height:16px;">D</span> Disponibilité</span>
+  <span><span class="dic-pill" style="--dic-color: var(--text-faint); width:16px;height:16px;">I</span> Intégrité</span>
+  <span><span class="dic-pill" style="--dic-color: var(--text-faint); width:16px;height:16px;">C</span> Confidentialité</span>
+</div>
+
+{% for bloc in blocs %}
+<div class="bloc-header">{{ bloc }}</div>
+{% for p in processus if p.bloc == bloc %}
+<a href="{{ url_for('processus_detail', processus_id=p.id) }}" class="processus-card">
+  <div class="processus-card-top">
+    <div>
+      <span class="mono text-faint" style="font-size: 11px;">{{ p.id }}</span>
+      <span class="processus-card-title">{{ p.nom }}</span>
+    </div>
+    <div class="dic-group">
+      <span class="dic-pill level-{{ p.dic_disponibilite }}" style="--dic-color: {{ dic_color(p.dic_disponibilite) }}" title="Disponibilité : {{ p.dic_disponibilite }}">D</span>
+      <span class="dic-pill level-{{ p.dic_integrite }}" style="--dic-color: {{ dic_color(p.dic_integrite) }}" title="Intégrité : {{ p.dic_integrite }}">I</span>
+      <span class="dic-pill level-{{ p.dic_confidentialite }}" style="--dic-color: {{ dic_color(p.dic_confidentialite) }}" title="Confidentialité : {{ p.dic_confidentialite }}">C</span>
+    </div>
+  </div>
+  <div class="text-dim" style="font-size: 13px;">{{ p.description }}</div>
+  <div class="text-faint mono" style="font-size: 11px; margin-top: 8px;">{{ p.actifs_support_ids|length }} actif(s) de support lié(s) →</div>
+</a>
+{% endfor %}
+{% endfor %}
+
+{% endblock %}
