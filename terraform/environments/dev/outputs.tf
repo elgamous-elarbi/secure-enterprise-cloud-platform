@@ -33,3 +33,7 @@ output "ecr_repository_url" {
   description = "URL du dépôt ECR pour l'app DGSSI"
   value       = module.ecr.repository_url
 }
+output "private_app_subnet_ids" {
+  description = "IDs des subnets privés app"
+  value       = module.network.private_app_subnet_ids
+}
