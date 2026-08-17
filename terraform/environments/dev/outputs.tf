@@ -37,3 +37,13 @@ output "private_app_subnet_ids" {
   description = "IDs des subnets privés app"
   value       = module.network.private_app_subnet_ids
 }
+output "rds_endpoint" {
+  description = "Endpoint de connexion RDS PostgreSQL"
+  value       = module.rds.db_instance_endpoint
+}
+
+output "rds_secret_arn" {
+  description = "ARN du secret Secrets Manager (identifiants RDS)"
+  value       = module.rds.secret_arn
+  sensitive   = true
+}
