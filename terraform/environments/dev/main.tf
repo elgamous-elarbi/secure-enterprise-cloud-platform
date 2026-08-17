@@ -29,7 +29,12 @@ module "network" {
   vpc_cidr     = "10.0.0.0/16"
   azs          = var.azs
 }
+module "ecr" {
+  source = "../../modules/ecr"
 
+  project_name = var.project_name
+  environment  = var.environment
+}
 module "iam" {
   source = "../../modules/iam"
 
@@ -37,9 +42,7 @@ module "iam" {
   environment  = var.environment
   aws_region   = var.aws_region
 
-  # Vide pour l'instant : le module ecr n'existe pas encore.
-  # Une fois créé, passer ses ARNs ici pour restreindre le scope ECR.
-  ecr_repository_arns = []
+ ecr_repository_arns = [module.ecr.repository_arn]
 
   github_org    = var.github_org
   github_repo   = var.github_repo

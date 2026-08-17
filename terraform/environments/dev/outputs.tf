@@ -29,3 +29,7 @@ output "github_oidc_provider_arn" {
   description = "ARN du provider OIDC GitHub (utile si vous ajoutez d'autres rôles fédérés plus tard)"
   value       = module.iam.github_oidc_provider_arn
 }
+output "ecr_repository_url" {
+  description = "URL du dépôt ECR pour l'app DGSSI"
+  value       = module.ecr.repository_url
+}
