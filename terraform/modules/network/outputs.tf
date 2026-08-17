@@ -32,3 +32,7 @@ output "internet_gateway_id" {
   description = "ID de l'Internet Gateway"
   value       = aws_internet_gateway.this.id
 }
+output "private_app_subnet_ids" {
+  description = "IDs des subnets privés app (destinés aux nodes/pods EKS)"
+  value       = aws_subnet.private_app[*].id
+}

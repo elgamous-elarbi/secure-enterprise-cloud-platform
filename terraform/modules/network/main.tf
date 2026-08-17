@@ -42,8 +42,8 @@ resource "aws_subnet" "public" {
   map_public_ip_on_launch = true
 
   tags = merge(local.common_tags, {
-    Name                    = "${local.name}-public-${var.azs[count.index]}"
-    Tier                    = "public"
+    Name                     = "${local.name}-public-${var.azs[count.index]}"
+    Tier                     = "public"
     "kubernetes.io/role/elb" = "1"
   })
 }
@@ -67,6 +67,25 @@ resource "aws_subnet" "private_data" {
 }
 
 # ---------------------------------------------------------------------------
+# Subnets privés app (EKS) — un par AZ
+# ---------------------------------------------------------------------------
+
+resource "aws_subnet" "private_app" {
+  count = length(var.azs)
+
+  vpc_id                  = aws_vpc.this.id
+  cidr_block              = cidrsubnet(var.vpc_cidr, 8, count.index + 11)
+  availability_zone       = var.azs[count.index]
+  map_public_ip_on_launch = false
+
+  tags = merge(local.common_tags, {
+    Name                              = "${local.name}-private-app-${var.azs[count.index]}"
+    Tier                              = "private-app"
+    "kubernetes.io/role/internal-elb" = "1"
+  })
+}
+
+# ---------------------------------------------------------------------------
 # Route tables
 # ---------------------------------------------------------------------------
 
@@ -82,7 +101,7 @@ resource "aws_route_table" "public" {
 }
 
 # Une route table privée par AZ, sans route de sortie internet
-# (RDS n'a pas besoin d'accès internet ; pas de NAT Gateway = 0€)
+# (RDS et EKS n'ont pas d'accès internet direct ; pas de NAT Gateway = 0€)
 resource "aws_route_table" "private" {
   count = length(var.azs)
 
@@ -102,6 +121,13 @@ resource "aws_route_table_association" "private_data" {
   count = length(var.azs)
 
   subnet_id      = aws_subnet.private_data[count.index].id
+  route_table_id = aws_route_table.private[count.index].id
+}
+
+resource "aws_route_table_association" "private_app" {
+  count = length(var.azs)
+
+  subnet_id      = aws_subnet.private_app[count.index].id
   route_table_id = aws_route_table.private[count.index].id
 }
 
@@ -152,12 +178,12 @@ resource "aws_iam_role_policy" "flow_logs" {
 }
 
 resource "aws_flow_log" "this" {
-  vpc_id               = aws_vpc.this.id
-  iam_role_arn         = aws_iam_role.flow_logs.arn
-  log_destination      = aws_cloudwatch_log_group.flow_logs.arn
-  log_destination_type = "cloud-watch-logs"
-  traffic_type         = "ALL"
-  max_aggregation_interval = 600
+  vpc_id                    = aws_vpc.this.id
+  iam_role_arn               = aws_iam_role.flow_logs.arn
+  log_destination            = aws_cloudwatch_log_group.flow_logs.arn
+  log_destination_type       = "cloud-watch-logs"
+  traffic_type                = "ALL"
+  max_aggregation_interval   = 600
   log_format = "$${version} $${account-id} $${interface-id} $${srcaddr} $${dstaddr} $${srcport} $${dstport} $${protocol} $${packets} $${bytes} $${start} $${end} $${action} $${log-status}"
 
   tags = local.common_tags
