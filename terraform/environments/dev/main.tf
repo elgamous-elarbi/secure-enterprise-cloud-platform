@@ -8,13 +8,13 @@ terraform {
     }
   }
 
-  # backend "s3" {
-  #   bucket         = "secip-terraform-state"       # à créer manuellement avant le 1er apply
-  #   key            = "dev/network.tfstate"
-  #   region         = "eu-west-1"
-  #   dynamodb_table = "secip-terraform-locks"        # verrouillage d'état
-  #   encrypt        = true
-  # }
+  backend "s3" {
+    bucket         = "secip-terraform-state-523842384893"
+    key            = "dev/terraform.tfstate"
+    region         = "eu-north-1"
+    dynamodb_table = "secip-terraform-locks"
+    encrypt        = true
+  }
 }
 
 provider "aws" {
