@@ -75,6 +75,24 @@ resource "aws_iam_role_policy" "ec2_ecr_pull" {
   })
 }
 
+# Lecture des secrets Secrets Manager (RDS + Flask)
+resource "aws_iam_role_policy" "ec2_secrets_read" {
+  name = "${local.name}-ec2-secrets-read"
+  role = aws_iam_role.ec2.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid      = "SecretsRead"
+        Effect   = "Allow"
+        Action   = ["secretsmanager:GetSecretValue"]
+        Resource = var.secret_arns
+      }
+    ]
+  })
+}
+
 resource "aws_iam_instance_profile" "ec2" {
   name = "${local.name}-ec2-instance-profile"
   role = aws_iam_role.ec2.name

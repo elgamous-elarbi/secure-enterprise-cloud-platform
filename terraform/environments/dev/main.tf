@@ -51,6 +51,8 @@ module "iam" {
   github_org    = var.github_org
   github_repo   = var.github_repo
   github_branch = var.github_branch
+
+  secret_arns = [module.rds.secret_arn, aws_secretsmanager_secret.app.arn]
 }
 module "rds" {
   source = "../../modules/rds"
@@ -70,4 +72,33 @@ module "security" {
   environment  = var.environment
   vpc_id       = module.network.vpc_id
   vpc_cidr     = module.network.vpc_cidr
+}
+resource "random_password" "flask_secret" {
+  length  = 50
+  special = true
+}
+
+resource "aws_secretsmanager_secret" "app" {
+  name = "secip-dev-app-secret"
+}
+
+resource "aws_secretsmanager_secret_version" "app" {
+  secret_id     = aws_secretsmanager_secret.app.id
+  secret_string = jsonencode({
+    flask_secret_key = random_password.flask_secret.result
+  })
+}
+
+module "ec2_app" {
+  source = "../../modules/ec2-app"
+
+  project_name           = var.project_name
+  environment            = var.environment
+  public_subnet_id       = module.network.public_subnet_ids[0]
+  app_security_group_id  = module.security.app_security_group_id
+  instance_profile_name  = module.iam.ec2_instance_profile_name
+  ecr_repository_url     = module.ecr.repository_url
+  db_secret_arn          = module.rds.secret_arn
+  db_address              = module.rds.db_instance_address
+  flask_secret_arn       = aws_secretsmanager_secret.app.arn
 }

@@ -74,7 +74,7 @@ resource "aws_security_group_rule" "rds_ingress" {
   protocol                 = "tcp"
   security_group_id        = aws_security_group.rds.id
   source_security_group_id = var.allowed_security_group_ids[count.index]
-  description               = "PostgreSQL depuis SG applicatif autorise"
+  description              = "PostgreSQL depuis SG applicatif autorise"
 }
 
 # Aucune règle egress explicite nécessaire : AWS autorise tout le trafic
@@ -90,9 +90,9 @@ resource "aws_db_instance" "this" {
   engine_version = "16"
   instance_class = var.instance_class
 
-  allocated_storage     = var.allocated_storage
-  storage_type           = "gp2"
-  storage_encrypted      = true
+  allocated_storage = var.allocated_storage
+  storage_type      = "gp2"
+  storage_encrypted = true
 
   db_name  = var.db_name
   username = var.db_username

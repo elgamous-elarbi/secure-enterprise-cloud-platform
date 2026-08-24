@@ -30,6 +30,34 @@ resource "aws_security_group_rule" "app_ingress_http" {
 }
 
 # Aucune regle egress explicite : AWS autorise tout le trafic sortant par
+resource "aws_security_group_rule" "app_egress_https" {
+  type              = "egress"
+  from_port         = 443
+  to_port            = 443
+  protocol          = "tcp"
+  security_group_id = aws_security_group.app.id
+  cidr_blocks       = ["0.0.0.0/0"]
+  description       = "HTTPS sortant (ECR, SSM, dnf, mises a jour)"
+}
+
+resource "aws_security_group_rule" "app_egress_dns" {
+  type              = "egress"
+  from_port         = 53
+  to_port            = 53
+  protocol          = "udp"
+  security_group_id = aws_security_group.app.id
+  cidr_blocks       = ["0.0.0.0/0"]
+  description       = "DNS sortant"
+}
+resource "aws_security_group_rule" "app_egress_postgres" {
+  type              = "egress"
+  from_port         = 5432
+  to_port            = 5432
+  protocol          = "tcp"
+  security_group_id = aws_security_group.app.id
+  cidr_blocks       = [var.vpc_cidr]
+  description       = "PostgreSQL sortant vers RDS (interne VPC)"
+}
 # defaut sur un Security Group. Suffisant tant qu il n y a pas de NAT Gateway
 # (les pods restent de toute facon sans acces internet direct).
 
@@ -66,7 +94,7 @@ resource "aws_security_group_rule" "alb_egress_to_app" {
   protocol                 = "tcp"
   security_group_id        = aws_security_group.alb.id
   source_security_group_id = aws_security_group.app.id
-  description               = "Vers les pods applicatifs uniquement"
+  description              = "Vers les pods applicatifs uniquement"
 }
 
 resource "aws_security_group_rule" "app_ingress_from_alb" {
@@ -76,5 +104,5 @@ resource "aws_security_group_rule" "app_ingress_from_alb" {
   protocol                 = "tcp"
   security_group_id        = aws_security_group.app.id
   source_security_group_id = aws_security_group.alb.id
-  description               = "Depuis l ALB uniquement"
+  description              = "Depuis l ALB uniquement"
 }

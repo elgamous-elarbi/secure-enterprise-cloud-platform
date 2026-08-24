@@ -47,3 +47,12 @@ output "rds_secret_arn" {
   value       = module.rds.secret_arn
   sensitive   = true
 }
+output "app_public_ip" {
+  description = "IP publique de l'instance EC2 applicative"
+  value       = module.ec2_app.public_ip
+}
+
+output "app_public_dns" {
+  description = "DNS public de l'instance EC2 applicative"
+  value       = module.ec2_app.public_dns
+}

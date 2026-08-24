@@ -178,13 +178,13 @@ resource "aws_iam_role_policy" "flow_logs" {
 }
 
 resource "aws_flow_log" "this" {
-  vpc_id                    = aws_vpc.this.id
-  iam_role_arn               = aws_iam_role.flow_logs.arn
-  log_destination            = aws_cloudwatch_log_group.flow_logs.arn
-  log_destination_type       = "cloud-watch-logs"
-  traffic_type                = "ALL"
-  max_aggregation_interval   = 600
-  log_format = "$${version} $${account-id} $${interface-id} $${srcaddr} $${dstaddr} $${srcport} $${dstport} $${protocol} $${packets} $${bytes} $${start} $${end} $${action} $${log-status}"
+  vpc_id                   = aws_vpc.this.id
+  iam_role_arn             = aws_iam_role.flow_logs.arn
+  log_destination          = aws_cloudwatch_log_group.flow_logs.arn
+  log_destination_type     = "cloud-watch-logs"
+  traffic_type             = "ALL"
+  max_aggregation_interval = 600
+  log_format               = "$${version} $${account-id} $${interface-id} $${srcaddr} $${dstaddr} $${srcport} $${dstport} $${protocol} $${packets} $${bytes} $${start} $${end} $${action} $${log-status}"
 
   tags = local.common_tags
 }

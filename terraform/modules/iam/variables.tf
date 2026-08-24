@@ -40,3 +40,8 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+variable "secret_arns" {
+  description = "ARNs des secrets Secrets Manager que le rôle EC2 peut lire"
+  type        = list(string)
+  default     = []
+}
