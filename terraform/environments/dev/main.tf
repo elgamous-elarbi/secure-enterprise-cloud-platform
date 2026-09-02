@@ -102,3 +102,10 @@ module "ec2_app" {
   db_address              = module.rds.db_instance_address
   flask_secret_arn       = aws_secretsmanager_secret.app.arn
 }
+module "cloudtrail" {
+  source = "../../modules/cloudtrail"
+
+  project_name = var.project_name
+  environment  = var.environment
+  aws_region   = var.aws_region
+}
